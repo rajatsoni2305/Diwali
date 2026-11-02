@@ -1,0 +1,70 @@
+{
+  "entities": {
+    "ExperienceSession": {
+      "title": "ExperienceSession",
+      "description": "Diwali Quest session containing Tanisha's wish and full-experience reaction recording metadata.",
+      "type": "object",
+      "properties": {
+        "sessionId": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "createdAt": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "type": "string"
+        },
+        "wishText": {
+          "type": "string",
+          "maxLength": 1000
+        },
+        "wishSubmittedAt": {
+          "type": "string"
+        },
+        "videoAssetId": {
+          "type": "string",
+          "maxLength": 256
+        },
+        "videoSecureUrl": {
+          "type": "string",
+          "maxLength": 1000
+        },
+        "videoUploadedAt": {
+          "type": "string"
+        },
+        "audioAssetId": {
+          "type": "string",
+          "maxLength": 256
+        },
+        "audioSecureUrl": {
+          "type": "string",
+          "maxLength": 1000
+        },
+        "audioUploadedAt": {
+          "type": "string"
+        },
+        "recordingStatus": {
+          "type": "string",
+          "enum": [
+            "not_recorded",
+            "recording",
+            "uploading",
+            "completed",
+            "failed"
+          ],
+          "maxLength": 32
+        }
+      },
+      "required": [
+        "sessionId"
+      ]
+    }
+  },
+  "firestore": {
+    "/experienceSessions/{sessionId}": {
+      "schema": "ExperienceSession",
+      "description": "Collection of Diwali Quest sessions storing wishes and full-experience reaction recordings."
+    }
+  }
+}
