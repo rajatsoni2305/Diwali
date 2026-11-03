@@ -10,7 +10,18 @@ import {
   getDocFromServer,
 } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
-import firebaseConfig from '../../firebase-applet-config.json';
+import appletConfig from '../../firebase-applet-config.json';
+
+export const firebaseConfig = {
+  apiKey: "AIzaSyBZnRc6-fsPxXXu4fUI_KWPxyO3lnUAFAM",
+  authDomain: "gen-lang-client-0687134351.firebaseapp.com",
+  databaseURL: "https://gen-lang-client-0687134351-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "gen-lang-client-0687134351",
+  storageBucket: "gen-lang-client-0687134351.firebasestorage.app",
+  messagingSenderId: "344512748614",
+  appId: "1:344512748614:web:9a5cb567ab5ddb1c9bbe47",
+  firestoreDatabaseId: (appletConfig as { firestoreDatabaseId?: string }).firestoreDatabaseId || "ai-studio-tanishasmagicald-4e24e276-78e5-4f8b-a858-35aebca52959"
+};
 
 export enum OperationType {
   CREATE = 'create',
