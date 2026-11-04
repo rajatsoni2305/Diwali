@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Sparkles, ArrowRight } from 'lucide-react';
@@ -8,10 +9,12 @@ interface SceneProps {
 }
 
 const SECRET_SHAYARI_LINES = [
-  'Tere pyar ka kya hisab du',
-  'Teri mohobbat ko kya khitab du',
-  'Koi acha sa phool hota toh jarur pesh karte',
-  'Magar jo khud hi gulab ho use kya gulab du...!!',
+  'Nazar ko,',
+  'Nazar ki,',
+  'Nazar na lage,',
+  'Koi achha bhi is kadar na lage,',
+  '"Tujhe dekha hai is nazar se,',
+  'Jis nazar se tujhe nazar na lage."',
 ];
 
 export const Scene15SecretDoor: React.FC<SceneProps> = ({ onNext }) => {
@@ -27,15 +30,19 @@ export const Scene15SecretDoor: React.FC<SceneProps> = ({ onNext }) => {
 
   const handleOpenDoor = () => {
     if (isDoorOpen) return;
+
     setIsDoorOpen(true);
     soundEffects.playDoorOpen();
 
-    // Start sequential shayari reveal after doors open into parchment room
-    setTimeout(() => setRevealedLines(1), 1600);
-    setTimeout(() => setRevealedLines(2), 3400);
-    setTimeout(() => setRevealedLines(3), 5200);
-    setTimeout(() => setRevealedLines(4), 7000);
-    setTimeout(() => setCanProceed(true), 8800);
+    // Reveal all six shayari lines sequentially.
+    const revealTimers = SECRET_SHAYARI_LINES.map((_, index) =>
+      setTimeout(() => setRevealedLines(index + 1), 1600 + index * 1400)
+    );
+
+    // Show Continue only after all six lines have appeared.
+    const continueTimer = setTimeout(() => {
+      setCanProceed(true);
+    }, 10200);
   };
 
   return (
@@ -125,7 +132,7 @@ export const Scene15SecretDoor: React.FC<SceneProps> = ({ onNext }) => {
           </motion.div>
         </div>
       ) : (
-        /* After Opening: Camera zooms into Antique Ivory Parchment Room */
+        /* After Opening: Antique Ivory Parchment Room */
         <motion.div
           initial={{ opacity: 0, scale: 0.92, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -143,13 +150,13 @@ export const Scene15SecretDoor: React.FC<SceneProps> = ({ onNext }) => {
             {/* Inner Gold Border */}
             <div className="absolute inset-3 border border-[#b37d2a]/40 rounded-2xl pointer-events-none" />
 
-            {/* Floral Rose Watermark in parchment center */}
+            {/* Floral Rose Watermark */}
             <div className="absolute inset-0 flex items-center justify-center opacity-8 pointer-events-none">
               <span className="text-9xl text-[#b37d2a]">🌹</span>
             </div>
 
             {/* Parchment Title Header */}
-            <div className="relative z-10 text-center mb-8">
+            <div className="relative z-10 text-center mb-6 sm:mb-8">
               <div className="inline-flex items-center gap-2 text-[#8b5a1b] font-cinzel text-xs uppercase tracking-[0.25em]">
                 <Sparkles className="w-3.5 h-3.5 text-[#b37d2a]" />
                 <span>The Secret Farman</span>
@@ -158,8 +165,8 @@ export const Scene15SecretDoor: React.FC<SceneProps> = ({ onNext }) => {
               <div className="w-24 h-0.5 bg-[#b37d2a]/50 mx-auto mt-2" />
             </div>
 
-            {/* 4-Line Shayari revealed one line at a time */}
-            <div className="relative z-10 space-y-4 sm:space-y-6 text-center min-h-[190px] flex flex-col justify-center">
+            {/* Six-Line Shayari: Sequential Reveal */}
+            <div className="relative z-10 space-y-3 sm:space-y-4 text-center min-h-[250px] flex flex-col justify-center">
               {SECRET_SHAYARI_LINES.map((line, idx) => (
                 <motion.p
                   key={idx}
@@ -169,9 +176,9 @@ export const Scene15SecretDoor: React.FC<SceneProps> = ({ onNext }) => {
                       ? { opacity: 1, y: 0, filter: 'blur(0px)' }
                       : { opacity: 0 }
                   }
-                  transition={{ duration: 1.4, ease: 'easeOut' }}
-                  className={`font-kalam text-xl sm:text-2xl md:text-3xl leading-relaxed tracking-wide ${
-                    idx === 3
+                  transition={{ duration: 1.2, ease: 'easeOut' }}
+                  className={`font-kalam text-lg sm:text-xl md:text-2xl leading-relaxed tracking-wide ${
+                    idx === 5
                       ? 'text-[#851818] font-bold'
                       : 'text-[#361a07]'
                   }`}
@@ -182,7 +189,7 @@ export const Scene15SecretDoor: React.FC<SceneProps> = ({ onNext }) => {
             </div>
 
             {/* Continue Button */}
-            <div className="relative z-10 mt-8 pt-4 flex justify-center min-h-[50px]">
+            <div className="relative z-10 mt-6 sm:mt-8 pt-4 flex justify-center min-h-[50px]">
               {canProceed && (
                 <motion.button
                   initial={{ opacity: 0, scale: 0.9 }}
