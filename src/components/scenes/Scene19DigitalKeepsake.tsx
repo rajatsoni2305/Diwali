@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Sparkles, Download, Printer, ArrowRight, Loader2, CheckCircle2 } from 'lucide-react';
@@ -11,15 +12,19 @@ interface SceneProps {
 }
 
 const SECOND_POEM_LINES = [
-  'Tum khubsurat jese Chand lagti ho',
-  'Tum nadan lekin pyari behisab lagti ho',
-  'Ab ye kanch ka tukta batyega tumhe tumhari khubsurati',
-  'Zara meri ankho se pucho tum kitni lajawab lagti ho',
+  'Raat bhar',
+  'tareef',
+  'karte rahe',
+  'aapki,',
+  'Chand se.',
+  'Chand itna',
+  'jala ke',
+  'Subha tak',
+  'Suraj',
+  'hogaya.',
 ];
 
 export const Scene19DigitalKeepsake: React.FC<SceneProps> = ({ onNext }) => {
-  // Stage 1: First two-line shayari only
-  // Stage 2: Second four-line poem revealed line-by-line + Rajat signature
   const [keepsakeStage, setKeepsakeStage] = useState<'stage1_shayari' | 'stage2_poem'>('stage1_shayari');
   const [canAdvanceStage, setCanAdvanceStage] = useState(false);
   const [poemLineStage, setPoemLineStage] = useState(0);
@@ -31,7 +36,6 @@ export const Scene19DigitalKeepsake: React.FC<SceneProps> = ({ onNext }) => {
   useEffect(() => {
     soundEffects.playTempleBell();
 
-    // After enough reading time for the first 2-line shayari, enable smooth transition to stage 2
     const timer = setTimeout(() => {
       setCanAdvanceStage(true);
     }, 4200);
@@ -78,19 +82,19 @@ export const Scene19DigitalKeepsake: React.FC<SceneProps> = ({ onNext }) => {
     setKeepsakeStage('stage2_poem');
     soundEffects.playDiyaIgnite(1.2);
 
-    // Reveal second 4-line poem line by line
-    setTimeout(() => setPoemLineStage(1), 800);
-    setTimeout(() => setPoemLineStage(2), 2600);
-    setTimeout(() => setPoemLineStage(3), 4400);
-    setTimeout(() => setPoemLineStage(4), 6200);
-    setTimeout(() => setPoemLineStage(5), 7800); // Rajat's signature appears last
+    // Reveal all ten lines sequentially.
+    SECOND_POEM_LINES.forEach((_, index) => {
+      setTimeout(() => setPoemLineStage(index + 1), 800 + index * 1100);
+    });
+
+    // Rajat's signature appears after the complete poem.
+    setTimeout(() => setPoemLineStage(11), 12200);
   };
 
-  // High-Resolution Canvas PNG Downloader with updated poem
   const handleDownloadImage = () => {
     const canvas = document.createElement('canvas');
     const width = 1200;
-    const height = 1600;
+    const height = 1800;
     canvas.width = width;
     canvas.height = height;
     const ctx = canvas.getContext('2d');
@@ -143,7 +147,7 @@ export const Scene19DigitalKeepsake: React.FC<SceneProps> = ({ onNext }) => {
     ctx.lineTo(width / 2 + 120, 270);
     ctx.stroke();
 
-    // Stage 1 Shayari
+    // Stage 1 Shayari — unchanged
     ctx.fillStyle = '#851818';
     ctx.font = 'italic 500 42px Kalam, cursive';
     ctx.fillText('"Tumhara khubsurat hona nhi', width / 2, 380);
@@ -157,23 +161,30 @@ export const Scene19DigitalKeepsake: React.FC<SceneProps> = ({ onNext }) => {
     ctx.fillStyle = '#6d2f10';
     ctx.fillRect(width / 2 - 25, 555, 50, 14);
 
-    // Stage 2 Four-Line Poem
+    // Stage 2 — New Little Diwali Memory shayari
     ctx.fillStyle = '#3a200a';
-    ctx.font = '500 38px Kalam, cursive';
-    ctx.fillText('Tum khubsurat jese Chand lagti ho', width / 2, 690);
-    ctx.fillText('Tum nadan lekin pyari behisab lagti ho', width / 2, 760);
-    ctx.fillText('Ab ye kanch ka tukta batyega tumhe tumhari khubsurati', width / 2, 830);
-    ctx.fillText('Zara meri ankho se pucho tum kitni lajawab lagti ho', width / 2, 900);
+    ctx.font = '500 42px Kalam, cursive';
+
+    const poemY = [700, 760, 820, 880, 940, 1060, 1120, 1180, 1240, 1300];
+
+    SECOND_POEM_LINES.forEach((line, index) => {
+      ctx.fillText(line, width / 2, poemY[index]);
+    });
+
+    // Final word emphasis
+    ctx.fillStyle = '#851818';
+    ctx.font = 'bold 48px Kalam, cursive';
+    ctx.fillText('hogaya.', width / 2, 1300);
 
     // Sign-off
     ctx.fillStyle = '#784e1b';
     ctx.font = 'bold 50px Kalam, cursive';
-    ctx.fillText('— Rajat', width / 2, 1060);
+    ctx.fillText('— Rajat', width / 2, 1450);
 
     // Footer
     ctx.fillStyle = '#9c7c4f';
     ctx.font = '24px Cinzel, serif';
-    ctx.fillText('Deepavali Chronicle • Eternal Light', width / 2, 1480);
+    ctx.fillText('Deepavali Chronicle • Eternal Light', width / 2, 1700);
 
     const link = document.createElement('a');
     link.download = 'tanisha-diwali-keepsake.png';
@@ -202,7 +213,7 @@ export const Scene19DigitalKeepsake: React.FC<SceneProps> = ({ onNext }) => {
         </h2>
       </div>
 
-      {/* The Antique Ivory Greeting Card / Farman Certificate */}
+      {/* The Antique Ivory Greeting Card */}
       <div className="relative z-10 w-full max-w-2xl my-auto px-2">
         <div
           ref={cardRef}
@@ -234,10 +245,9 @@ export const Scene19DigitalKeepsake: React.FC<SceneProps> = ({ onNext }) => {
             <div className="w-14 h-4 bg-gradient-to-r from-[#63290b] via-[#913d10] to-[#4e1f06] rounded-b-full border-t border-[#b37d2a] -mt-1" />
           </div>
 
-          {/* CONTENT REVEAL: NEVER SHOW BOTH POEMS SIMULTANEOUSLY */}
+          {/* CONTENT REVEAL: Never show both poems simultaneously */}
           <AnimatePresence mode="wait">
             {keepsakeStage === 'stage1_shayari' ? (
-              /* FIRST REVEAL — EXISTING TWO-LINE SHAYARI ONLY */
               <motion.div
                 key="stage1"
                 initial={{ opacity: 0, scale: 0.95 }}
@@ -252,7 +262,6 @@ export const Scene19DigitalKeepsake: React.FC<SceneProps> = ({ onNext }) => {
                   Tumhara hona hi khubsurat hai"
                 </p>
 
-                {/* Transition Button to Stage 2 after reading */}
                 <div className="mt-8 flex justify-center no-print min-h-[48px]">
                   {canAdvanceStage && (
                     <motion.button
@@ -271,7 +280,6 @@ export const Scene19DigitalKeepsake: React.FC<SceneProps> = ({ onNext }) => {
                 </div>
               </motion.div>
             ) : (
-              /* SECOND REVEAL — FOUR-LINE POEM LINE BY LINE + RAJAT SIGNATURE */
               <motion.div
                 key="stage2"
                 initial={{ opacity: 0, y: 15 }}
@@ -279,7 +287,7 @@ export const Scene19DigitalKeepsake: React.FC<SceneProps> = ({ onNext }) => {
                 transition={{ duration: 1.2, ease: 'easeOut' }}
                 className="relative z-10 text-center my-4 py-2 border-y border-[#b37d2a]/20"
               >
-                <div className="space-y-3 sm:space-y-4 min-h-[180px] flex flex-col justify-center">
+                <div className="space-y-2 sm:space-y-3 min-h-[300px] flex flex-col justify-center">
                   {SECOND_POEM_LINES.map((line, idx) => (
                     <motion.p
                       key={idx}
@@ -289,9 +297,9 @@ export const Scene19DigitalKeepsake: React.FC<SceneProps> = ({ onNext }) => {
                           ? { opacity: 1, y: 0, filter: 'blur(0px)' }
                           : { opacity: 0 }
                       }
-                      transition={{ duration: 1.3, ease: 'easeOut' }}
+                      transition={{ duration: 1.1, ease: 'easeOut' }}
                       className={`font-kalam text-lg sm:text-2xl leading-relaxed tracking-wide ${
-                        idx === 3
+                        idx === 8 || idx === 9
                           ? 'text-[#851818] font-bold text-xl sm:text-2xl'
                           : 'text-[#361a07]'
                       }`}
@@ -301,8 +309,8 @@ export const Scene19DigitalKeepsake: React.FC<SceneProps> = ({ onNext }) => {
                   ))}
                 </div>
 
-                {/* Rajat's Signature appears last */}
-                {poemLineStage >= 5 && (
+                {/* Signature appears after the final word */}
+                {poemLineStage >= 11 && (
                   <motion.div
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
@@ -320,7 +328,7 @@ export const Scene19DigitalKeepsake: React.FC<SceneProps> = ({ onNext }) => {
         </div>
       </div>
 
-      {/* Keepsake Actions: Download Image & Print & Advance */}
+      {/* Keepsake Actions */}
       <div className="relative z-10 w-full max-w-xl pb-4 flex flex-wrap items-center justify-center gap-3 no-print mt-6">
         <button
           onClick={handleDownloadImage}
@@ -338,7 +346,7 @@ export const Scene19DigitalKeepsake: React.FC<SceneProps> = ({ onNext }) => {
           <span>Print / PDF</span>
         </button>
 
-        {keepsakeStage === 'stage2_poem' && poemLineStage >= 5 && (
+        {keepsakeStage === 'stage2_poem' && poemLineStage >= 11 && (
           <button
             onClick={handleCompleteQuest}
             disabled={isFinalizing}
@@ -350,7 +358,7 @@ export const Scene19DigitalKeepsake: React.FC<SceneProps> = ({ onNext }) => {
         )}
       </div>
 
-      {/* Cinematic Finalizing & Uploading Overlay Modal */}
+      {/* Finalizing & Uploading Overlay */}
       <AnimatePresence>
         {isFinalizing && (
           <motion.div
@@ -376,7 +384,6 @@ export const Scene19DigitalKeepsake: React.FC<SceneProps> = ({ onNext }) => {
                 {uploadStatusText}
               </p>
 
-              {/* Progress Bar */}
               <div className="w-full bg-[#0a0502] rounded-full h-2.5 overflow-hidden border border-[#d4af37]/30 mb-2">
                 <motion.div
                   className="bg-gradient-to-r from-[#b37d2a] to-[#ffd54f] h-full"
