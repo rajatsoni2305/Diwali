@@ -1,3 +1,4 @@
+
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -7,12 +8,15 @@ import React, { useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { Lock } from 'lucide-react';
 import { SceneId } from './types/scenes';
+
 import { AtmosphereCanvas } from './components/AtmosphereCanvas';
+import FestiveDecor from './components/FestiveDecor';
+
 import { AdminDashboard } from './components/admin/AdminDashboard';
 import { RecordingConsentModal } from './components/recording/RecordingConsentModal';
 import { RecordingIndicator } from './components/recording/RecordingIndicator';
+
 import { sessionService } from './services/sessionService';
-import { recordingManager } from './services/recordingManager';
 
 // All Scenes
 import { Scene1DarkOpening } from './components/scenes/Scene1DarkOpening';
@@ -66,62 +70,97 @@ export default function App() {
 
   const goToNextScene = () => {
     const currentIndex = SCENE_FLOW.indexOf(currentScene);
+
     if (currentIndex >= 0 && currentIndex < SCENE_FLOW.length - 1) {
       setCurrentScene(SCENE_FLOW[currentIndex + 1]);
     }
   };
 
   const handleRestart = () => {
-    // Reset session storage for fresh 14 diyas run
+    // Reset the diya progress for a fresh run.
     try {
       sessionStorage.removeItem('tanisha_diwali_lit_diyas_v1');
     } catch {
-      // ignore
+      // Session storage may be unavailable in some browser modes.
     }
+
     sessionService.resetSession();
     setCurrentScene('dark_opening');
   };
 
   const getIntensity = (): 'dark' | 'subtle' | 'rich' | 'celebration' => {
-    if (currentScene === 'dark_opening') return 'dark';
-    if (currentScene === 'rocket_launch' || currentScene === 'golden_fireworks' || currentScene === 'diwali_celebration') {
+    if (currentScene === 'dark_opening') {
+      return 'dark';
+    }
+
+    if (
+      currentScene === 'rocket_launch' ||
+      currentScene === 'golden_fireworks' ||
+      currentScene === 'diwali_celebration'
+    ) {
       return 'celebration';
     }
-    if (currentScene === 'dharma_courage' || currentScene === 'faith_devotion') {
+
+    if (
+      currentScene === 'dharma_courage' ||
+      currentScene === 'faith_devotion'
+    ) {
       return 'subtle';
     }
+
     return 'rich';
   };
 
+  const getDecorationVariant = (): 'full' | 'subtle' => {
+    if (
+      currentScene === 'dark_opening' ||
+      currentScene === 'dharma_courage' ||
+      currentScene === 'faith_devotion'
+    ) {
+      return 'subtle';
+    }
+
+    return 'full';
+  };
+
   return (
-    <div className="relative w-full min-h-screen bg-[#070503] text-[#F7E7CE] overflow-x-hidden select-none">
-      {/* Background Golden Particle Atmosphere */}
+    <div className="relative isolate w-full min-h-screen bg-[#070503] text-[#F7E7CE] overflow-x-hidden select-none">
+      {/* Existing golden particle atmosphere */}
       <AtmosphereCanvas intensity={getIntensity()} />
 
-      {/* Discreet Recording Indicator (unobtrusive pulsing red dot + time, opt-in preview) */}
+      {/* Festive visual layer */}
+      <FestiveDecor variant={getDecorationVariant()} />
+
+      {/* Existing recording indicator */}
       <RecordingIndicator />
 
-      {/* Initial Explicit Permission Consent Screen */}
+      {/* Initial explicit permission consent screen */}
       {!hasGivenConsentChoice && (
-        <RecordingConsentModal onStartQuest={() => setHasGivenConsentChoice(true)} />
+        <RecordingConsentModal
+          onStartQuest={() => setHasGivenConsentChoice(true)}
+        />
       )}
 
-      {/* Discreet Admin Lock Button in Top-Right Corner for Rajat */}
-      <div className="fixed top-4 right-4 z-40">
+      {/* Admin lock button */}
+      <div className="fixed top-4 right-4 z-[60]">
         <button
           onClick={() => setShowAdmin(true)}
           title="Admin View"
+          aria-label="Open admin view"
           className="p-2 rounded-full bg-[#140b04]/50 border border-[#d4af37]/30 text-[#d4af37]/60 hover:text-[#ffd54f] hover:border-[#ffd54f] hover:bg-[#201007] transition-all cursor-pointer backdrop-blur-xs"
         >
           <Lock className="w-3.5 h-3.5" />
         </button>
       </div>
 
-      {/* Admin Dashboard Modal */}
-      <AdminDashboard isOpen={showAdmin} onClose={() => setShowAdmin(false)} />
+      {/* Existing admin dashboard */}
+      <AdminDashboard
+        isOpen={showAdmin}
+        onClose={() => setShowAdmin(false)}
+      />
 
-      {/* Main Scene Container with Cinematic Transitions */}
-      <main className="relative w-full min-h-screen">
+      {/* Main scene container */}
+      <main className="relative z-30 w-full min-h-screen">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentScene}
@@ -131,26 +170,85 @@ export default function App() {
             transition={{ duration: 0.9, ease: 'easeInOut' }}
             className="w-full min-h-screen"
           >
-            {currentScene === 'dark_opening' && <Scene1DarkOpening onNext={goToNextScene} />}
-            {currentScene === 'rocket_launch' && <Scene2Rocket onNext={goToNextScene} />}
-            {currentScene === 'golden_fireworks' && <Scene3Fireworks onNext={goToNextScene} />}
-            {currentScene === 'opening_shayari' && <Scene4Shayari onNext={goToNextScene} />}
-            {currentScene === 'personal_intro' && <Scene5PersonalIntro onNext={goToNextScene} />}
-            {currentScene === 'journey_map' && <Scene6JourneyMap onNext={goToNextScene} />}
-            {currentScene === 'dharma_courage' && <Scene7DharmaCourage onNext={goToNextScene} />}
-            {currentScene === 'faith_devotion' && <Scene8FaithDevotion onNext={goToNextScene} />}
-            {currentScene === 'unity_loyalty' && <Scene9UnityLoyalty onNext={goToNextScene} />}
-            {currentScene === 'ayodhya_reveal' && <Scene10AyodhyaReveal onNext={goToNextScene} />}
-            {currentScene === 'homecoming' && <Scene11Homecoming onNext={goToNextScene} />}
-            {currentScene === 'royal_gates' && <Scene12RoyalGates onNext={goToNextScene} />}
-            {currentScene === 'diwali_celebration' && <Scene13DiwaliCelebration onNext={goToNextScene} />}
-            {currentScene === 'diya_challenge' && <Scene14DiyaChallenge onNext={goToNextScene} />}
-            {currentScene === 'secret_door' && <Scene15SecretDoor onNext={goToNextScene} />}
-            {currentScene === 'memory_room' && <Scene16MemoryRoom onNext={goToNextScene} />}
-            {currentScene === 'wish_lantern' && <Scene17WishLantern onNext={goToNextScene} />}
-            {currentScene === 'final_greeting' && <Scene18FinalGreeting onNext={goToNextScene} />}
-            {currentScene === 'digital_keepsake' && <Scene19DigitalKeepsake onNext={goToNextScene} />}
-            {currentScene === 'revisit' && <Scene20Revisit onRestart={handleRestart} />}
+            {currentScene === 'dark_opening' && (
+              <Scene1DarkOpening onNext={goToNextScene} />
+            )}
+
+            {currentScene === 'rocket_launch' && (
+              <Scene2Rocket onNext={goToNextScene} />
+            )}
+
+            {currentScene === 'golden_fireworks' && (
+              <Scene3Fireworks onNext={goToNextScene} />
+            )}
+
+            {currentScene === 'opening_shayari' && (
+              <Scene4Shayari onNext={goToNextScene} />
+            )}
+
+            {currentScene === 'personal_intro' && (
+              <Scene5PersonalIntro onNext={goToNextScene} />
+            )}
+
+            {currentScene === 'journey_map' && (
+              <Scene6JourneyMap onNext={goToNextScene} />
+            )}
+
+            {currentScene === 'dharma_courage' && (
+              <Scene7DharmaCourage onNext={goToNextScene} />
+            )}
+
+            {currentScene === 'faith_devotion' && (
+              <Scene8FaithDevotion onNext={goToNextScene} />
+            )}
+
+            {currentScene === 'unity_loyalty' && (
+              <Scene9UnityLoyalty onNext={goToNextScene} />
+            )}
+
+            {currentScene === 'ayodhya_reveal' && (
+              <Scene10AyodhyaReveal onNext={goToNextScene} />
+            )}
+
+            {currentScene === 'homecoming' && (
+              <Scene11Homecoming onNext={goToNextScene} />
+            )}
+
+            {currentScene === 'royal_gates' && (
+              <Scene12RoyalGates onNext={goToNextScene} />
+            )}
+
+            {currentScene === 'diwali_celebration' && (
+              <Scene13DiwaliCelebration onNext={goToNextScene} />
+            )}
+
+            {currentScene === 'diya_challenge' && (
+              <Scene14DiyaChallenge onNext={goToNextScene} />
+            )}
+
+            {currentScene === 'secret_door' && (
+              <Scene15SecretDoor onNext={goToNextScene} />
+            )}
+
+            {currentScene === 'memory_room' && (
+              <Scene16MemoryRoom onNext={goToNextScene} />
+            )}
+
+            {currentScene === 'wish_lantern' && (
+              <Scene17WishLantern onNext={goToNextScene} />
+            )}
+
+            {currentScene === 'final_greeting' && (
+              <Scene18FinalGreeting onNext={goToNextScene} />
+            )}
+
+            {currentScene === 'digital_keepsake' && (
+              <Scene19DigitalKeepsake onNext={goToNextScene} />
+            )}
+
+            {currentScene === 'revisit' && (
+              <Scene20Revisit onRestart={handleRestart} />
+            )}
           </motion.div>
         </AnimatePresence>
       </main>
