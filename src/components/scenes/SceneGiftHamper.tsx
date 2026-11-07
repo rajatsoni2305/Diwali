@@ -9,7 +9,6 @@ interface Props {
 export const SceneGiftHamper: React.FC<Props> = memo(({ onNext }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  // Confetti Physics Engine
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -70,9 +69,11 @@ export const SceneGiftHamper: React.FC<Props> = memo(({ onNext }) => {
 
   const handleContinue = () => {
     try {
-      soundEffects.play('bell');
-    } catch (e) {
-      // fallback
+      if (typeof (soundEffects as any)?.play === 'function') {
+        (soundEffects as any).play('click');
+      }
+    } catch {
+      // safe no-op
     }
     onNext();
   };
@@ -81,7 +82,6 @@ export const SceneGiftHamper: React.FC<Props> = memo(({ onNext }) => {
     <div className="relative min-h-screen w-full flex flex-col items-center justify-center px-4 sm:px-8 text-center select-none pt-20 pb-32">
       <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none z-0" />
 
-      {/* Luxury Diwali Hamper Visual */}
       <motion.div
         initial={{ scale: 0.85, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
@@ -91,7 +91,6 @@ export const SceneGiftHamper: React.FC<Props> = memo(({ onNext }) => {
         <div className="absolute inset-0 bg-pink-500/20 blur-3xl rounded-full" />
 
         <div className="relative z-10 flex flex-col items-center">
-          {/* Treats Stack */}
           <div className="flex -space-x-3 text-4xl -mb-4 z-20">
             <span>🎁</span>
             <span className="scale-125">🍫</span>
@@ -99,7 +98,6 @@ export const SceneGiftHamper: React.FC<Props> = memo(({ onNext }) => {
             <span className="scale-115">🪔</span>
           </div>
 
-          {/* Woven Basket */}
           <div className="w-52 h-32 bg-gradient-to-b from-amber-600 via-amber-700 to-amber-950 rounded-b-[40px] border-2 border-amber-300 shadow-[0_0_40px_rgba(245,158,11,0.7)] flex flex-col items-center justify-center p-4">
             <div className="w-14 h-8 bg-red-600 rounded-full border border-red-300 shadow-md flex items-center justify-center text-sm text-white">
               🎀
@@ -112,7 +110,6 @@ export const SceneGiftHamper: React.FC<Props> = memo(({ onNext }) => {
         </div>
       </motion.div>
 
-      {/* Romantic Headline */}
       <motion.div
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
@@ -127,7 +124,6 @@ export const SceneGiftHamper: React.FC<Props> = memo(({ onNext }) => {
         </p>
       </motion.div>
 
-      {/* Button */}
       <motion.button
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
