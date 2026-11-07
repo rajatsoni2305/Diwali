@@ -1,105 +1,94 @@
+
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { ArrowRight, Sparkles, Heart } from 'lucide-react';
 
-interface SceneProps {
-  onNext: () => void;
-}
+interface SceneProps { onNext: () => void; }
 
 export const Scene9UnityLoyalty: React.FC<SceneProps> = ({ onNext }) => {
-  const [stage, setStage] = useState<number>(0);
+  const [stage, setStage] = useState(0);
 
   useEffect(() => {
-    const t1 = setTimeout(() => setStage(1), 800);
-    const t2 = setTimeout(() => setStage(2), 3400);
-    const t3 = setTimeout(() => setStage(3), 5200);
-
-    return () => {
-      clearTimeout(t1);
-      clearTimeout(t2);
-      clearTimeout(t3);
-    };
+    const timers = [
+      setTimeout(() => setStage(1), 800),
+      setTimeout(() => setStage(2), 3400),
+      setTimeout(() => setStage(3), 5200),
+    ];
+    return () => timers.forEach(clearTimeout);
   }, []);
 
   return (
-    <div className="relative w-full h-full min-h-screen bg-[#070d18] flex flex-col items-center justify-center px-4 sm:px-6 py-12 select-none overflow-hidden">
-      {/* Background waters of Sethusamudram */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,rgba(10,50,70,0.5)_0%,rgba(7,13,24,1)_85%)] pointer-events-none" />
+    <div className="relative isolate flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-[#10131c] px-4 py-12">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_70%,rgba(35,91,105,.4),transparent_65%)]" />
 
-      {/* Floating Sacred Stones with 'श्री राम' */}
-      <div className="relative z-10 w-full max-w-lg mb-8 flex justify-center items-center gap-3 sm:gap-6 flex-wrap">
-        {[
-          { label: 'श्री राम', delay: 0 },
-          { label: 'श्री राम', delay: 0.3 },
-          { label: 'श्री राम', delay: 0.6 },
-          { label: 'श्री राम', delay: 0.9 },
-        ].map((stone, idx) => (
+      {/* Floating bridge stones */}
+      <div className="relative z-10 mb-9 flex w-full max-w-lg flex-wrap items-center justify-center gap-3 sm:gap-5">
+        {['श्री राम', 'श्री राम', 'श्री राम', 'श्री राम'].map((label, index) => (
           <motion.div
-            key={idx}
-            animate={{
-              y: [0, -8, 0],
-              rotate: [0, idx % 2 === 0 ? 1.5 : -1.5, 0],
-            }}
-            transition={{
-              duration: 3 + idx * 0.4,
-              repeat: Infinity,
-              ease: 'easeInOut',
-              delay: stone.delay,
-            }}
-            className="px-4 py-2.5 rounded-2xl bg-gradient-to-b from-[#2a3b4c] to-[#141f2a] border border-[#f5b041]/40 shadow-[0_10px_25px_rgba(0,0,0,0.8),0_0_15px_rgba(245,176,65,0.3)] flex items-center gap-2"
+            key={index}
+            animate={{ y: [0, -9, 0], rotate: [0, index % 2 ? -2 : 2, 0] }}
+            transition={{ duration: 3 + index * .4, repeat: Infinity, ease: 'easeInOut', delay: index * .3 }}
+            className="flex items-center gap-2 rounded-2xl border border-[#e9bd70]/40 bg-gradient-to-b from-[#52606a] to-[#18232e] px-4 py-3 shadow-[0_12px_30px_rgba(0,0,0,.5)]"
           >
-            <Sparkles className="w-3.5 h-3.5 text-[#ffd700]" />
-            <span className="font-rozha text-sm sm:text-base text-[#ffe082] tracking-wider font-semibold">
-              {stone.label}
-            </span>
+            <Sparkles className="h-4 w-4 text-[#ffd166]" />
+            <span className="font-rozha text-sm font-semibold tracking-wider text-[#ffe6a0] sm:text-base">{label}</span>
           </motion.div>
         ))}
       </div>
 
-      {/* Content Card */}
-      <div className="relative z-10 max-w-2xl w-full text-center p-6 sm:p-12 rounded-3xl bg-[#0e1724]/75 backdrop-blur-md border border-[#f59e0b]/30 shadow-[0_0_60px_rgba(0,0,0,0.9)]">
-        {/* Stage Tag */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#1b2636] border border-[#fbbf24]/30 text-[#fde68a] text-xs font-cinzel tracking-widest uppercase mb-8">
-          <Heart className="w-3.5 h-3.5 text-[#f59e0b]" />
-          <span>Stage III — Ram Setu: The Bridge of Unity</span>
-          <Heart className="w-3.5 h-3.5 text-[#f59e0b]" />
+      {/* Water and floating bridge */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-48 overflow-hidden">
+        <motion.div
+          animate={{ x: [0, -25, 0] }}
+          transition={{ duration: 8, repeat: Infinity }}
+          className="absolute inset-0"
+        >
+          <svg viewBox="0 0 1200 200" preserveAspectRatio="none" className="h-full w-full">
+            <path d="M0 50 Q150 15 300 50 T600 50 T900 50 T1200 50 V200 H0Z" fill="#16415a" />
+            <path d="M0 95 Q150 55 300 95 T600 95 T900 95 T1200 95 V200 H0Z" fill="#0b2c43" />
+            <path d="M0 140 Q150 105 300 140 T600 140 T900 140 T1200 140 V200 H0Z" fill="#071b2b" />
+          </svg>
+        </motion.div>
+      </div>
+
+      <div className="relative z-10 w-full max-w-2xl rounded-[30px] border border-[#e9bd70]/30 bg-[#111d2a]/85 p-6 text-center shadow-[0_25px_90px_rgba(0,0,0,.55)] backdrop-blur-xl sm:p-12">
+        <div className="mb-8 inline-flex items-center gap-3 rounded-full border border-[#fbbf24]/30 bg-[#273344] px-4 py-2 font-cinzel text-[10px] uppercase tracking-widest text-[#fde68a] sm:text-xs">
+          <Heart className="h-4 w-4 text-[#f59e0b]" />
+          Stage III — Ram Setu: The Bridge of Unity
+          <Heart className="h-4 w-4 text-[#f59e0b]" />
         </div>
 
-        {/* Message 1 */}
-        <div className="space-y-6 min-h-[160px] flex flex-col justify-center">
+        <div className="flex min-h-[190px] flex-col justify-center gap-7">
           <motion.p
             initial={{ opacity: 0, y: 15, filter: 'blur(8px)' }}
             animate={stage >= 1 ? { opacity: 1, y: 0, filter: 'blur(0px)' } : {}}
-            transition={{ duration: 1.5, ease: 'easeOut' }}
-            className="font-cinzel text-lg sm:text-2xl md:text-3xl text-[#fef3c7] leading-relaxed tracking-wide gold-glow"
+            transition={{ duration: 1.5 }}
+            className="font-cinzel text-lg leading-relaxed text-[#fef3c7] sm:text-2xl md:text-3xl gold-glow"
           >
             "Great things are rarely achieved alone. Unity turns individual strength into something greater."
           </motion.p>
 
-          {/* Message 2 */}
           <motion.p
             initial={{ opacity: 0, y: 12, filter: 'blur(6px)' }}
             animate={stage >= 2 ? { opacity: 1, y: 0, filter: 'blur(0px)' } : {}}
-            transition={{ duration: 1.5, ease: 'easeOut' }}
-            className="font-marcellus text-base sm:text-xl text-[#fde68a] leading-relaxed italic"
+            transition={{ duration: 1.5 }}
+            className="font-marcellus text-base italic leading-relaxed text-[#fde68a] sm:text-xl"
           >
             "Respect people, value teamwork, and remember that everyone has something meaningful to contribute."
           </motion.p>
         </div>
 
-        {/* Continue Button to Ayodhya Reveal */}
-        <div className="mt-10 pt-4 flex justify-center min-h-[50px]">
+        <div className="mt-10 flex min-h-[50px] justify-center">
           {stage >= 3 && (
             <motion.button
-              initial={{ opacity: 0, scale: 0.9 }}
+              initial={{ opacity: 0, scale: .9 }}
               animate={{ opacity: 1, scale: 1 }}
               whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              whileTap={{ scale: .95 }}
               onClick={onNext}
-              className="px-7 py-3 rounded-full bg-gradient-to-r from-[#b45309] via-[#d97706] to-[#92400e] text-[#fffbeb] font-cinzel text-xs sm:text-sm font-bold tracking-widest uppercase shadow-[0_0_25px_rgba(245,158,11,0.5)] flex items-center gap-2 cursor-pointer border border-[#fef3c7]/40"
+              className="flex items-center gap-2 rounded-full border border-[#fef3c7]/40 bg-gradient-to-r from-[#8b4b16] via-[#d58b32] to-[#8b4b16] px-7 py-3 font-cinzel text-xs font-bold uppercase tracking-widest text-[#fff8e8] shadow-[0_0_30px_rgba(245,158,11,.3)] sm:text-sm"
             >
-              <span>Approach Grand Ayodhya</span>
-              <ArrowRight className="w-4 h-4" />
+              Approach Grand Ayodhya <ArrowRight className="h-4 w-4" />
             </motion.button>
           )}
         </div>
