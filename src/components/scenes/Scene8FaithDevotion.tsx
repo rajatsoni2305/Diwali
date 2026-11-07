@@ -1,90 +1,98 @@
+
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { ArrowRight, Waves } from 'lucide-react';
 
-interface SceneProps {
-  onNext: () => void;
-}
+interface SceneProps { onNext: () => void; }
 
 export const Scene8FaithDevotion: React.FC<SceneProps> = ({ onNext }) => {
-  const [stage, setStage] = useState<number>(0);
+  const [stage, setStage] = useState(0);
 
   useEffect(() => {
-    const t1 = setTimeout(() => setStage(1), 800);
-    const t2 = setTimeout(() => setStage(2), 3400);
-    const t3 = setTimeout(() => setStage(3), 5200);
-
-    return () => {
-      clearTimeout(t1);
-      clearTimeout(t2);
-      clearTimeout(t3);
-    };
+    const timers = [
+      setTimeout(() => setStage(1), 800),
+      setTimeout(() => setStage(2), 3400),
+      setTimeout(() => setStage(3), 5200),
+    ];
+    return () => timers.forEach(clearTimeout);
   }, []);
 
   return (
-    <div className="relative w-full h-full min-h-screen bg-[#040814] flex flex-col items-center justify-center px-4 sm:px-6 py-12 select-none overflow-hidden">
-      {/* Deep Ocean & Starlit Celestial Atmosphere */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(15,35,80,0.5)_0%,rgba(4,8,20,1)_85%)] pointer-events-none" />
+    <div className="relative isolate flex min-h-screen w-full items-center justify-center overflow-hidden bg-[#071323] px-4 py-12">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_20%,#193c60_0%,#0b1b30_45%,#040a16_100%)]" />
 
-      {/* Full Moon & Celestial Glow */}
-      <div className="absolute top-12 sm:top-16 w-32 h-32 sm:w-48 sm:h-48 rounded-full bg-gradient-to-b from-[#fff8e1] to-[#ffd54f] blur-xs opacity-90 shadow-[0_0_80px_rgba(255,224,130,0.6)] flex items-center justify-center">
-        {/* Respectful silhouette of Hanumanji soaring across the ocean with devotion */}
-        <svg viewBox="0 0 100 100" className="w-20 h-20 text-[#101c38] opacity-85" fill="currentColor">
-          <path d="M50 20 C55 20 60 25 60 30 C60 35 55 40 50 40 C45 40 40 35 40 30 C40 25 45 20 50 20 Z M46 42 L54 42 L66 65 L58 75 L52 56 L48 76 L40 68 Z M62 38 Q75 42 85 30 L80 50 Z" />
+      {/* Moon */}
+      <motion.div
+        className="pointer-events-none absolute right-[12%] top-12 h-24 w-24 rounded-full bg-gradient-to-br from-[#fff9dc] to-[#d8c18a] shadow-[0_0_70px_rgba(255,225,155,.45)] sm:right-[18%] sm:h-36 sm:w-36"
+        animate={{ opacity: [0.75, 1, 0.75], scale: [1, 1.04, 1] }}
+        transition={{ duration: 5, repeat: Infinity }}
+      />
+
+      {/* Ocean layers */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-52 overflow-hidden">
+        <motion.svg
+          viewBox="0 0 1200 240"
+          preserveAspectRatio="none"
+          className="absolute bottom-0 h-full w-full"
+          animate={{ x: [0, -30, 0] }}
+          transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
+        >
+          <path d="M0 80 Q150 20 300 80 T600 80 T900 80 T1200 80 V240 H0Z" fill="#153d5a" opacity=".8" />
+          <path d="M0 120 Q150 65 300 120 T600 120 T900 120 T1200 120 V240 H0Z" fill="#0b2944" />
+          <path d="M0 165 Q150 115 300 165 T600 165 T900 165 T1200 165 V240 H0Z" fill="#07192d" />
+        </motion.svg>
+      </div>
+
+      {/* Hanuman-inspired symbolic silhouette */}
+      <div className="pointer-events-none absolute left-[9%] top-[20%] opacity-50 sm:left-[17%]">
+        <svg viewBox="0 0 120 140" width="95" fill="none">
+          <path d="M56 30 C40 18 24 27 28 44 C31 56 46 58 52 49" stroke="#d9c28d" strokeWidth="5" strokeLinecap="round" />
+          <circle cx="60" cy="34" r="12" fill="#d9c28d" />
+          <path d="M48 48 L72 48 L83 103 L40 103 Z" fill="#d9c28d" />
+          <path d="M43 62 L14 45 M77 62 L106 39" stroke="#d9c28d" strokeWidth="7" strokeLinecap="round" />
+          <path d="M48 100 L34 132 M73 100 L87 132" stroke="#d9c28d" strokeWidth="8" strokeLinecap="round" />
+          <path d="M73 72 Q104 68 105 93" stroke="#d9c28d" strokeWidth="5" fill="none" />
         </svg>
       </div>
 
-      {/* Ocean Waves SVG layer */}
-      <div className="absolute inset-x-0 bottom-0 h-44 pointer-events-none opacity-40">
-        <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-full h-full text-[#0a1c3d]" fill="currentColor">
-          <path d="M0,40 C150,90 350,-20 500,40 C650,100 900,10 1200,50 L1200,120 L0,120 Z" />
-        </svg>
-      </div>
-
-      {/* Glass Card */}
-      <div className="relative z-10 max-w-2xl w-full text-center p-6 sm:p-12 rounded-3xl bg-[#09142b]/75 backdrop-blur-md border border-[#3b82f6]/30 shadow-[0_0_60px_rgba(0,0,0,0.9)] mt-24 sm:mt-28">
-        {/* Stage Tag */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#0d234d] border border-[#60a5fa]/30 text-[#93c5fd] text-xs font-cinzel tracking-widest uppercase mb-8">
-          <Waves className="w-3.5 h-3.5 text-[#60a5fa]" />
-          <span>Stage II — The Mahasagar of Devotion</span>
-          <Waves className="w-3.5 h-3.5 text-[#60a5fa]" />
+      <div className="relative z-10 mt-16 w-full max-w-2xl rounded-[30px] border border-[#83b8d9]/30 bg-[#091a2c]/85 p-6 text-center shadow-[0_25px_90px_rgba(0,0,0,.55)] backdrop-blur-xl sm:p-12">
+        <div className="mb-8 inline-flex items-center gap-3 rounded-full border border-[#83b8d9]/30 bg-[#112c46] px-4 py-2 font-cinzel text-[10px] uppercase tracking-[.18em] text-[#c2e2f6] sm:text-xs">
+          <Waves className="h-4 w-4" />
+          Stage II — The Mahasagar of Devotion
+          <Waves className="h-4 w-4" />
         </div>
 
-        {/* Message 1 */}
-        <div className="space-y-6 min-h-[160px] flex flex-col justify-center">
+        <div className="flex min-h-[190px] flex-col justify-center gap-7">
           <motion.p
             initial={{ opacity: 0, y: 15, filter: 'blur(8px)' }}
             animate={stage >= 1 ? { opacity: 1, y: 0, filter: 'blur(0px)' } : {}}
-            transition={{ duration: 1.5, ease: 'easeOut' }}
-            className="font-cinzel text-lg sm:text-2xl md:text-3xl text-[#e0f2fe] leading-relaxed tracking-wide drop-shadow-[0_0_20px_rgba(96,165,250,0.5)]"
+            transition={{ duration: 1.5 }}
+            className="font-cinzel text-lg leading-relaxed text-[#e0f2fe] sm:text-2xl md:text-3xl"
           >
             "True devotion is not just about words. It is about loyalty, faith, and the strength to keep going."
           </motion.p>
 
-          {/* Message 2 */}
           <motion.p
             initial={{ opacity: 0, y: 12, filter: 'blur(6px)' }}
             animate={stage >= 2 ? { opacity: 1, y: 0, filter: 'blur(0px)' } : {}}
-            transition={{ duration: 1.5, ease: 'easeOut' }}
-            className="font-marcellus text-base sm:text-xl text-[#bae6fd] leading-relaxed italic"
+            transition={{ duration: 1.5 }}
+            className="font-marcellus text-base italic leading-relaxed text-[#b9dcf1] sm:text-xl"
           >
             "Be sincere in your efforts. Stay loyal to your values, and do not give up when the journey becomes difficult."
           </motion.p>
         </div>
 
-        {/* Continue Button */}
-        <div className="mt-10 pt-4 flex justify-center min-h-[50px]">
+        <div className="mt-10 flex min-h-[50px] justify-center">
           {stage >= 3 && (
             <motion.button
-              initial={{ opacity: 0, scale: 0.9 }}
+              initial={{ opacity: 0, scale: .9 }}
               animate={{ opacity: 1, scale: 1 }}
               whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              whileTap={{ scale: .95 }}
               onClick={onNext}
-              className="px-7 py-3 rounded-full bg-gradient-to-r from-[#1d4ed8] via-[#3b82f6] to-[#1e40af] text-white font-cinzel text-xs sm:text-sm font-bold tracking-widest uppercase shadow-[0_0_25px_rgba(59,130,246,0.5)] flex items-center gap-2 cursor-pointer border border-[#bfdbfe]/40"
+              className="flex items-center gap-2 rounded-full border border-[#bfdbfe]/40 bg-gradient-to-r from-[#164b72] via-[#347fae] to-[#164b72] px-7 py-3 font-cinzel text-xs font-bold uppercase tracking-widest text-white shadow-[0_0_30px_rgba(59,130,246,.3)] sm:text-sm"
             >
-              <span>Bridge the Ocean to Ram Setu</span>
-              <ArrowRight className="w-4 h-4" />
+              Bridge the Ocean to Ram Setu <ArrowRight className="h-4 w-4" />
             </motion.button>
           )}
         </div>
