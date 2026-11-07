@@ -9,9 +9,11 @@ interface Props {
 export const SceneFairyLightsJar: React.FC<Props> = memo(({ onNext }) => {
   const handleContinue = () => {
     try {
-      soundEffects.play('click');
-    } catch (e) {
-      // fallback
+      if (typeof (soundEffects as any)?.play === 'function') {
+        (soundEffects as any).play('click');
+      }
+    } catch {
+      // safe no-op
     }
     onNext();
   };
@@ -20,14 +22,12 @@ export const SceneFairyLightsJar: React.FC<Props> = memo(({ onNext }) => {
     <div className="relative min-h-screen w-full flex flex-col items-center justify-center px-4 sm:px-8 text-center select-none pt-20 pb-32">
       <div className="absolute w-[450px] h-[450px] bg-amber-500/15 blur-[120px] rounded-full pointer-events-none" />
 
-      {/* Mason Jar Visual Container */}
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 1 }}
         className="relative w-56 h-80 mx-auto mb-8 flex flex-col items-center animate-floating-hero z-10"
       >
-        {/* Flower Garland on Lid */}
         <div className="relative z-20 flex items-center justify-center -mb-2">
           <div className="w-8 h-8 rounded-full bg-rose-600 shadow-[0_0_12px_#f43f5e]" />
           <div className="w-10 h-10 rounded-full bg-amber-500 shadow-[0_0_14px_#f59e0b] -ml-2" />
@@ -35,7 +35,6 @@ export const SceneFairyLightsJar: React.FC<Props> = memo(({ onNext }) => {
         </div>
         <div className="w-32 h-6 bg-gradient-to-r from-amber-700 via-amber-800 to-amber-950 rounded-md z-10 border border-amber-300/60 shadow-lg" />
 
-        {/* Vintage Glass Body with Lights */}
         <div className="relative w-44 h-64 border-2 border-yellow-200/60 rounded-3xl bg-gradient-to-b from-yellow-300/15 via-amber-500/25 to-yellow-200/10 backdrop-blur-md shadow-[0_0_45px_rgba(251,191,36,0.7)] overflow-hidden flex items-center justify-center">
           {[...Array(24)].map((_, i) => (
             <div
@@ -53,7 +52,6 @@ export const SceneFairyLightsJar: React.FC<Props> = memo(({ onNext }) => {
         </div>
       </motion.div>
 
-      {/* Typography */}
       <motion.div
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
@@ -69,7 +67,6 @@ export const SceneFairyLightsJar: React.FC<Props> = memo(({ onNext }) => {
         </p>
       </motion.div>
 
-      {/* Button */}
       <motion.button
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
@@ -83,4 +80,3 @@ export const SceneFairyLightsJar: React.FC<Props> = memo(({ onNext }) => {
 });
 
 SceneFairyLightsJar.displayName = 'SceneFairyLightsJar';
-
