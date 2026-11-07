@@ -18,7 +18,6 @@ export const SceneInteractiveCrackers: React.FC<Props> = memo(({ onNext }) => {
     { id: 'sparkler', name: 'Magic Phuljhadi', icon: '🪄', color: '#ec4899', spark: '✨ ⭐️ ✨' }
   ];
 
-  // Canvas Sparks Engine for actively lit fireworks
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -86,9 +85,11 @@ export const SceneInteractiveCrackers: React.FC<Props> = memo(({ onNext }) => {
 
   const handleLight = (id: string) => {
     try {
-      soundEffects.play('firework');
-    } catch (e) {
-      // fallback
+      if (typeof (soundEffects as any)?.play === 'function') {
+        (soundEffects as any).play('click');
+      }
+    } catch {
+      // safe no-op
     }
     setLitItems((prev) => ({ ...prev, [id]: true }));
   };
@@ -99,9 +100,11 @@ export const SceneInteractiveCrackers: React.FC<Props> = memo(({ onNext }) => {
   const handleContinue = () => {
     if (!isReady) return;
     try {
-      soundEffects.play('click');
-    } catch (e) {
-      // fallback
+      if (typeof (soundEffects as any)?.play === 'function') {
+        (soundEffects as any).play('click');
+      }
+    } catch {
+      // safe no-op
     }
     onNext();
   };
@@ -124,7 +127,6 @@ export const SceneInteractiveCrackers: React.FC<Props> = memo(({ onNext }) => {
         </p>
       </motion.div>
 
-      {/* Cracker Grid */}
       <div className="grid grid-cols-3 gap-5 sm:gap-6 max-w-md w-full mb-10 z-10">
         {crackers.map((item, idx) => {
           const isLit = litItems[item.id];
@@ -165,7 +167,6 @@ export const SceneInteractiveCrackers: React.FC<Props> = memo(({ onNext }) => {
         })}
       </div>
 
-      {/* Progress & Advance */}
       <motion.button
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
