@@ -16,7 +16,6 @@ export const SceneGrandThali: React.FC<Props> = memo(({
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [diyasLit, setDiyasLit] = useState({ left: true, center: true, right: true });
 
-  // Canvas particle engine for firework sparkles
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -48,7 +47,7 @@ export const SceneGrandThali: React.FC<Props> = memo(({
     const colors = ['#fde047', '#f59e0b', '#fbbf24', '#ffffff', '#ea580c'];
 
     const createBurst = (originX: number, originY: number) => {
-      for (let i = 0; i < 20; i++) {
+      for (let i = 0; i < 18; i++) {
         const angle = Math.random() * Math.PI * 2;
         const speed = Math.random() * 2.5 + 0.5;
         sparks.push({
@@ -69,7 +68,7 @@ export const SceneGrandThali: React.FC<Props> = memo(({
       ctx.clearRect(0, 0, w, h);
       timer++;
 
-      if (timer % 60 === 0) {
+      if (timer % 65 === 0) {
         createBurst(w / 2 + (Math.random() - 0.5) * 200, h * 0.28 + (Math.random() - 0.5) * 80);
       }
 
@@ -108,18 +107,22 @@ export const SceneGrandThali: React.FC<Props> = memo(({
 
   const toggleDiya = (key: 'left' | 'center' | 'right') => {
     try {
-      soundEffects.play('pop');
-    } catch (e) {
-      // fallback
+      if (typeof (soundEffects as any)?.play === 'function') {
+        (soundEffects as any).play('click');
+      }
+    } catch {
+      // safe no-op
     }
     setDiyasLit((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
   const handleContinue = () => {
     try {
-      soundEffects.play('click');
-    } catch (e) {
-      // fallback
+      if (typeof (soundEffects as any)?.play === 'function') {
+        (soundEffects as any).play('click');
+      }
+    } catch {
+      // safe no-op
     }
     onNext();
   };
@@ -129,7 +132,6 @@ export const SceneGrandThali: React.FC<Props> = memo(({
       <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none z-0" />
       <div className="absolute w-[500px] h-[500px] bg-amber-500/10 blur-[130px] rounded-full pointer-events-none" />
 
-      {/* Decorative Fireworks Sparkle Header */}
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -140,11 +142,9 @@ export const SceneGrandThali: React.FC<Props> = memo(({
           ✨
         </div>
 
-        {/* Detailed Pooja Thali Visual with Rings */}
         <div className="relative w-72 h-44 sm:w-80 sm:h-48 flex items-center justify-center">
           <div className="absolute inset-0 bg-orange-600/20 blur-3xl rounded-full" />
 
-          {/* Outer Rotating Lotus Mandala Rim */}
           <div className="absolute w-64 h-32 sm:w-72 sm:h-36 rounded-full border-2 border-amber-400/80 bg-gradient-to-b from-amber-900/60 via-purple-950/80 to-black/80 flex items-center justify-around px-4 shadow-[0_0_35px_rgba(245,158,11,0.55)]">
             {['🌸', '🌼', '🌺', '🌼', '🌸', '🌼', '🌺'].map((flower, i) => (
               <span key={i} className="text-xl drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]">
@@ -153,12 +153,9 @@ export const SceneGrandThali: React.FC<Props> = memo(({
             ))}
           </div>
 
-          {/* Inner Golden Ring */}
           <div className="absolute w-48 h-20 rounded-full border border-dashed border-yellow-200/50" />
 
-          {/* Triple Diyas Array */}
           <div className="relative z-10 flex items-end space-x-6 sm:space-x-8">
-            {/* Left Diya */}
             <div
               onClick={() => toggleDiya('left')}
               className="flex flex-col items-center scale-95 cursor-pointer transition-transform hover:scale-110"
@@ -169,7 +166,6 @@ export const SceneGrandThali: React.FC<Props> = memo(({
               <div className="w-8 h-4 bg-gradient-to-b from-amber-700 to-amber-950 rounded-b-full border-t border-amber-500 shadow-md" />
             </div>
 
-            {/* Center Master Diya */}
             <div
               onClick={() => toggleDiya('center')}
               className="flex flex-col items-center scale-140 -mb-2 cursor-pointer transition-transform hover:scale-155"
@@ -180,7 +176,6 @@ export const SceneGrandThali: React.FC<Props> = memo(({
               <div className="w-10 h-5 bg-gradient-to-b from-amber-600 via-amber-800 to-amber-950 rounded-b-full border-t border-amber-400 shadow-xl" />
             </div>
 
-            {/* Right Diya */}
             <div
               onClick={() => toggleDiya('right')}
               className="flex flex-col items-center scale-95 cursor-pointer transition-transform hover:scale-110"
@@ -194,7 +189,6 @@ export const SceneGrandThali: React.FC<Props> = memo(({
         </div>
       </motion.div>
 
-      {/* Spacious Royal Headline */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -209,7 +203,6 @@ export const SceneGrandThali: React.FC<Props> = memo(({
         </h3>
       </motion.div>
 
-      {/* Flirty Personalized Letter Box */}
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -226,7 +219,6 @@ export const SceneGrandThali: React.FC<Props> = memo(({
         </span>
       </motion.div>
 
-      {/* Button */}
       <motion.button
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
