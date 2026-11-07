@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Sparkles, Compass } from 'lucide-react';
@@ -15,19 +16,18 @@ const INTRO_MESSAGES = [
 ];
 
 export const Scene5PersonalIntro: React.FC<SceneProps> = ({ onNext }) => {
-  const [step, setStep] = useState<number>(0);
-  const [showButton, setShowButton] = useState<boolean>(false);
+  const [step, setStep] = useState(0);
+  const [showButton, setShowButton] = useState(false);
 
   useEffect(() => {
-    const timers: NodeJS.Timeout[] = [];
-
-    timers.push(setTimeout(() => setStep(1), 600));
-    timers.push(setTimeout(() => setStep(2), 2400));
-    timers.push(setTimeout(() => setStep(3), 4400));
-    timers.push(setTimeout(() => setStep(4), 6400));
-    timers.push(setTimeout(() => setStep(5), 8400)); // "Ready to enter..."
-    timers.push(setTimeout(() => setShowButton(true), 9600));
-
+    const timers = [
+      setTimeout(() => setStep(1), 600),
+      setTimeout(() => setStep(2), 2400),
+      setTimeout(() => setStep(3), 4400),
+      setTimeout(() => setStep(4), 6400),
+      setTimeout(() => setStep(5), 8400),
+      setTimeout(() => setShowButton(true), 9600),
+    ];
     return () => timers.forEach(clearTimeout);
   }, []);
 
@@ -37,68 +37,67 @@ export const Scene5PersonalIntro: React.FC<SceneProps> = ({ onNext }) => {
   };
 
   return (
-    <div className="relative w-full h-full min-h-screen bg-[#070503] flex flex-col items-center justify-center px-4 sm:px-6 py-12 select-none overflow-hidden">
-      {/* Ancient royal architectural arch silhouette */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(110,65,20,0.3)_0%,rgba(7,5,3,1)_80%)] pointer-events-none" />
+    <div className="relative isolate flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-[#180f1e] px-5 py-12">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_35%,rgba(151,91,81,.28),transparent_65%)]" />
 
-      {/* Subtle royal ornamental arch frame */}
-      <div className="relative z-10 max-w-xl w-full text-center flex flex-col items-center">
-        {/* Name dedication badge */}
+      <div className="pointer-events-none absolute left-1/2 top-1/2 h-[450px] w-[280px] -translate-x-1/2 -translate-y-1/2 rounded-t-[150px] border border-[#d6b27b]/20 sm:h-[550px] sm:w-[400px]" />
+      <div className="pointer-events-none absolute left-1/2 top-1/2 h-[420px] w-[250px] -translate-x-1/2 -translate-y-1/2 rounded-t-[140px] border border-[#d6b27b]/10 sm:h-[520px] sm:w-[370px]" />
+
+      <div className="relative z-10 flex w-full max-w-xl flex-col items-center text-center">
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.2 }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#20140a]/80 border border-[#d4af37]/40 text-[#f5d77f] text-xs font-cinzel tracking-widest uppercase mb-8 shadow-md"
+          className="mb-9 inline-flex items-center gap-2 rounded-full border border-[#d6b27b]/40 bg-[#2b1b29]/80 px-4 py-2 text-[10px] uppercase tracking-[.18em] text-[#f1d49c] sm:text-xs"
         >
-          <Sparkles className="w-3.5 h-3.5 text-[#f5b041]" />
-          <span>A Diwali Chronicle for Tanisha</span>
-          <Sparkles className="w-3.5 h-3.5 text-[#f5b041]" />
+          <Sparkles className="h-4 w-4" />
+          A Diwali Chronicle for Tanisha
+          <Sparkles className="h-4 w-4" />
         </motion.div>
 
-        {/* Sequential Conversation Text */}
-        <div className="space-y-4 sm:space-y-6 min-h-[220px] flex flex-col justify-center">
-          {INTRO_MESSAGES.map((msg, index) => (
+        <div className="flex min-h-[250px] flex-col justify-center space-y-4 sm:space-y-6">
+          {INTRO_MESSAGES.map((message, index) => (
             <motion.p
               key={index}
-              initial={{ opacity: 0, y: 12, filter: 'blur(6px)' }}
-              animate={step > index ? { opacity: 1, y: 0, filter: 'blur(0px)' } : { opacity: 0 }}
-              transition={{ duration: 1.2, ease: 'easeOut' }}
-              className={`font-marcellus text-lg sm:text-2xl leading-relaxed ${
+              initial={{ opacity: 0, y: 14, filter: 'blur(7px)' }}
+              animate={step > index
+                ? { opacity: 1, y: 0, filter: 'blur(0px)' }
+                : { opacity: 0 }}
+              transition={{ duration: 1.1 }}
+              className={`font-marcellus text-lg leading-relaxed sm:text-2xl ${
                 index === 3
-                  ? 'text-[#f5b041] font-semibold tracking-wide'
-                  : 'text-[#f0dfc4]'
+                  ? 'font-semibold text-[#f3c77d] gold-glow'
+                  : 'text-[#f2e5d5]'
               }`}
             >
-              {msg}
+              {message}
             </motion.p>
           ))}
 
-          {/* Final Call to Adventure */}
           {step >= 5 && (
             <motion.p
-              initial={{ opacity: 0, y: 14 }}
+              initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1.4 }}
-              className="font-cinzel text-xl sm:text-2xl text-[#ffe57f] gold-glow font-bold pt-4 tracking-wider"
+              transition={{ duration: 1.2 }}
+              className="pt-4 font-cinzel text-lg leading-relaxed text-[#ffe5a9] gold-glow sm:text-2xl"
             >
               Ready to enter a little world of magic?
             </motion.p>
           )}
         </div>
 
-        {/* The Grand Quest Enter Button */}
-        <div className="mt-10 min-h-[60px] flex items-center justify-center">
+        <div className="mt-9 flex min-h-16 items-center justify-center">
           {showButton && (
             <motion.button
-              initial={{ opacity: 0, scale: 0.85, y: 15 }}
+              initial={{ opacity: 0, scale: 0.85, y: 12 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.96 }}
               onClick={handleEnterQuest}
-              className="px-8 sm:px-10 py-3.5 sm:py-4 rounded-full bg-gradient-to-r from-[#b37d2a] via-[#f3b544] to-[#b37d2a] text-[#0d0702] font-cinzel font-bold text-sm sm:text-base tracking-[0.2em] uppercase box-gold-glow-active transition-all cursor-pointer flex items-center gap-3 border border-[#fff2b2]"
+              className="flex items-center gap-3 rounded-full border border-[#fff0c0]/70 bg-gradient-to-r from-[#a96e3c] via-[#f0ca83] to-[#a96e3c] px-8 py-4 font-cinzel text-xs font-bold tracking-[.16em] text-[#251526] shadow-[0_0_35px_rgba(220,166,91,.3)] sm:text-sm"
             >
-              <Compass className="w-5 h-5 text-[#0d0702] animate-spin" style={{ animationDuration: '10s' }} />
-              <span>ENTER THE QUEST</span>
+              <Compass className="h-5 w-5" />
+              ENTER THE QUEST
             </motion.button>
           )}
         </div>
