@@ -1,44 +1,78 @@
-import React from 'react';
+import React, { memo } from 'react';
+import { motion } from 'framer-motion';
+import { soundEffects } from '../../services/soundEffects';
 
 interface Props {
   onNext: () => void;
 }
 
-export const SceneSurpriseReveal: React.FC<Props> = ({ onNext }) => {
+export const SceneSurpriseReveal: React.FC<Props> = memo(({ onNext }) => {
+  const handleContinue = () => {
+    try {
+      soundEffects.play('chime');
+    } catch (e) {
+      // fallback
+    }
+    onNext();
+  };
+
   return (
-    <div className="relative min-h-screen flex flex-col items-center justify-center px-4 text-center select-none pt-12 pb-24">
-      <div className="relative w-64 h-56 mb-6 flex flex-col items-center justify-center">
-        <div className="absolute inset-0 bg-amber-500/20 blur-3xl rounded-full" />
-        
-        <div className="flex space-x-6 mb-3">
-          <div className="w-2.5 h-3.5 bg-yellow-200 rounded-full animate-flame" />
-          <div className="w-2.5 h-3.5 bg-yellow-200 rounded-full animate-flame" />
+    <div className="relative min-h-screen w-full flex flex-col items-center justify-center px-4 sm:px-8 text-center select-none pt-20 pb-32">
+      {/* Tiered Diya Array Visual */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.85 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 1 }}
+        className="relative w-80 h-64 mb-8 flex flex-col items-center justify-center z-10"
+      >
+        <div className="absolute inset-0 bg-amber-500/25 blur-3xl rounded-full" />
+
+        {/* Tier 1 (Top Pair) */}
+        <div className="flex space-x-10 mb-4">
+          <div className="w-3.5 h-5 bg-yellow-200 rounded-full animate-flame-real" />
+          <div className="w-3.5 h-5 bg-yellow-200 rounded-full animate-flame-real" />
         </div>
 
-        <div className="relative z-10 flex flex-col items-center scale-150 mb-3">
-          <div className="w-3.5 h-6 bg-gradient-to-t from-orange-500 via-yellow-200 to-white rounded-full animate-flame shadow-[0_0_25px_#f59e0b]" />
-          <div className="w-8 h-4 bg-amber-700 rounded-b-full border-t border-amber-400" />
+        {/* Tier 2 (Central Hero Diya) */}
+        <div className="relative z-10 flex flex-col items-center scale-160 mb-5">
+          <div className="w-4 h-7 bg-gradient-to-t from-orange-500 via-yellow-200 to-white rounded-full animate-flame-real shadow-[0_0_30px_#f59e0b]" />
+          <div className="w-10 h-5 bg-gradient-to-b from-amber-700 to-amber-950 rounded-b-full border-t border-amber-400 shadow-xl" />
         </div>
 
-        <div className="flex space-x-8">
-          <div className="w-3 h-4 bg-yellow-200 rounded-full animate-flame" />
-          <div className="w-3 h-4 bg-yellow-200 rounded-full animate-flame" />
+        {/* Tier 3 (Bottom Arc) */}
+        <div className="flex space-x-12">
+          <div className="w-4 h-5 bg-yellow-200 rounded-full animate-flame-real" />
+          <div className="w-4 h-5 bg-yellow-200 rounded-full animate-flame-real" />
         </div>
-      </div>
+      </motion.div>
 
-      <h2 className="text-2xl sm:text-3xl font-serif text-amber-100 mb-2">
-        Let's light up Diwali together ✨
-      </h2>
-      <p className="text-amber-200/80 italic font-light text-sm max-w-xs mb-8">
-        "No matter the distance, under the same glowing sky, my heart is right next to yours."
-      </p>
+      {/* Typography */}
+      <motion.div
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4, duration: 0.8 }}
+        className="max-w-md w-full px-6 mb-8 z-10"
+      >
+        <h2 className="text-3xl sm:text-5xl font-serif font-black text-amber-50 mb-3 drop-shadow-[0_2px_15px_rgba(251,191,36,0.6)]">
+          Let's light up Diwali together ✨
+        </h2>
+        <div className="w-20 h-[1.5px] bg-gradient-to-r from-transparent via-amber-400 to-transparent mx-auto mb-4" />
+        <p className="text-amber-200/90 font-serif italic text-lg sm:text-xl leading-relaxed">
+          "No matter the distance, under the same glowing sky, my heart is right next to yours."
+        </p>
+      </motion.div>
 
-      <button
-        onClick={onNext}
-        className="px-8 py-3 rounded-full bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-white font-medium shadow-[0_0_25px_rgba(245,158,11,0.6)] active:scale-95 transition-all"
+      {/* Button */}
+      <motion.button
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        onClick={handleContinue}
+        className="px-12 py-4 rounded-full bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-white font-medium text-lg tracking-wide shadow-[0_0_35px_rgba(245,158,11,0.65)] hover:brightness-110 transition-all border border-amber-300/50 cursor-pointer z-10"
       >
         Open Our Memories 📖
-      </button>
+      </motion.button>
     </div>
   );
-};
+});
+
+SceneSurpriseReveal.displayName = 'SceneSurpriseReveal';
