@@ -18,135 +18,135 @@ const GREETING_LETTER = {
 };
 
 export const Scene18FinalGreeting: React.FC<SceneProps> = ({ onNext }) => {
-  const [step, setStep] = useState<number>(0);
-  const [canProceed, setCanProceed] = useState<boolean>(false);
+  const [step, setStep] = useState(0);
+  const [canProceed, setCanProceed] = useState(false);
 
   useEffect(() => {
     soundEffects.playTempleBell();
 
-    const timers: NodeJS.Timeout[] = [];
-    timers.push(setTimeout(() => setStep(1), 500)); // Header & Salutation
-    timers.push(setTimeout(() => setStep(2), 1400)); // Para 1: Personal wishes
-    timers.push(setTimeout(() => setStep(3), 2600)); // Para 2: Family wishes
-    timers.push(setTimeout(() => setStep(4), 3800)); // Para 3: Final greeting & blessings
-    timers.push(setTimeout(() => {
-      setStep(5); // Signature
-      setCanProceed(true);
-    }, 4800));
+    const timers = [
+      setTimeout(() => setStep(1), 500),
+      setTimeout(() => setStep(2), 1400),
+      setTimeout(() => setStep(3), 2600),
+      setTimeout(() => setStep(4), 3800),
+      setTimeout(() => {
+        setStep(5);
+        setCanProceed(true);
+      }, 4800),
+    ];
 
     return () => timers.forEach(clearTimeout);
   }, []);
 
   return (
-    <div className="relative w-full min-h-screen bg-[#080503] flex flex-col items-center justify-center px-4 sm:px-6 py-10 sm:py-14 select-none overflow-x-hidden">
-      {/* Warm Golden Halo Glow */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(95,55,18,0.45)_0%,rgba(8,5,3,1)_85%)] pointer-events-none" />
+    <div className="relative min-h-screen w-full overflow-x-hidden bg-[#10091b] px-4 py-10 sm:px-6 sm:py-14 flex items-center justify-center">
+      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,rgba(126,79,151,0.25),transparent_70%)]" />
 
-      {/* Decorative Traditional Toran Overhead */}
-      <div className="absolute top-0 inset-x-0 h-10 border-b border-[#d4af37]/30 flex justify-center items-center gap-6 pointer-events-none opacity-40">
-        <span className="text-[#ffd54f]">𑁍</span>
-        <span className="text-[#ffd54f]">𑁍</span>
-        <span className="text-[#ffd54f]">𑁍</span>
-        <span className="text-[#ffd54f]">𑁍</span>
-        <span className="text-[#ffd54f]">𑁍</span>
+      <div className="absolute inset-x-0 top-0 h-20 pointer-events-none bg-gradient-to-b from-[#f4c96b]/10 to-transparent" />
+
+      <div className="absolute top-0 left-0 right-0 flex justify-around text-[#f6d78b]/60 text-xl pointer-events-none">
+        {Array.from({ length: 9 }).map((_, i) => (
+          <motion.span
+            key={i}
+            animate={{ opacity: [0.35, 1, 0.35] }}
+            transition={{ duration: 2 + (i % 3), repeat: Infinity }}
+          >
+            ✦
+          </motion.span>
+        ))}
       </div>
 
-      {/* Main Glass Scroll Letter Card */}
-      <div className="relative z-10 max-w-2xl sm:max-w-3xl w-full p-6 sm:p-10 md:p-12 rounded-3xl bg-[#140b05]/90 backdrop-blur-md border-2 border-[#d4af37]/40 shadow-[0_0_60px_rgba(212,175,55,0.18)] flex flex-col my-auto">
-        {/* Divine Greeting Header */}
+      <motion.div
+        initial={{ opacity: 0, y: 25 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1 }}
+        className="relative z-10 my-auto w-full max-w-3xl rounded-[2rem] border border-[#e8c77d]/40 bg-gradient-to-br from-[#281936]/95 via-[#1b1029]/95 to-[#120b1c]/95 p-6 shadow-[0_20px_90px_rgba(0,0,0,0.5)] sm:p-10 md:p-12"
+      >
+        <div className="pointer-events-none absolute inset-3 rounded-[1.5rem] border border-[#e8c77d]/15" />
+
         <motion.div
-          initial={{ opacity: 0, scale: 0.9, y: -10 }}
-          animate={step >= 1 ? { opacity: 1, scale: 1, y: 0 } : {}}
-          transition={{ duration: 1.2, ease: 'easeOut' }}
-          className="text-center mb-6 sm:mb-8"
+          initial={{ opacity: 0, y: -15 }}
+          animate={step >= 1 ? { opacity: 1, y: 0 } : {}}
+          className="relative text-center"
         >
-          <div className="inline-flex items-center gap-2 text-xs font-cinzel text-[#d4af37] tracking-[0.25em] uppercase mb-2">
-            <Sparkles className="w-3.5 h-3.5 text-[#ffb300]" />
-            <span>Sacred Deepavali Letter</span>
-            <Sparkles className="w-3.5 h-3.5 text-[#ffb300]" />
+          <div className="mb-3 flex items-center justify-center gap-3 text-xs uppercase tracking-[0.3em] text-[#e8c77d]">
+            <Sparkles size={15} />
+            A Little Diwali Letter
+            <Sparkles size={15} />
           </div>
-          <h1 className="font-cinzel-dec text-2xl sm:text-4xl md:text-5xl text-[#fff3b0] gold-glow font-bold tracking-wider">
-            HAPPY DIWALI, TANISHA!
+
+          <h1 className="font-cinzel-dec text-2xl font-bold tracking-wider text-[#fff0c7] sm:text-4xl md:text-5xl">
+            HAPPY DIWALI
           </h1>
-          <div className="w-36 h-0.5 bg-gradient-to-r from-transparent via-[#ffd54f] to-transparent mx-auto mt-3" />
+
+          <p className="mt-2 font-kalam text-xl text-[#e8c77d] sm:text-2xl">
+            For Tanisha
+          </p>
+
+          <div className="mx-auto mt-5 h-px w-40 bg-gradient-to-r from-transparent via-[#e8c77d] to-transparent" />
         </motion.div>
 
-        {/* Letter Body: Three Natural Paragraphs */}
-        <div className="space-y-6 sm:space-y-7 text-[#f5e6cc] font-marcellus text-base sm:text-lg leading-relaxed">
-          {/* Paragraph 1: Personal Wishes */}
+        <div className="relative mt-8 space-y-7 font-marcellus text-sm leading-8 text-[#f4e9d7] sm:text-base sm:leading-9">
           <motion.div
-            initial={{ opacity: 0, y: 15, filter: 'blur(4px)' }}
-            animate={step >= 2 ? { opacity: 1, y: 0, filter: 'blur(0px)' } : {}}
-            transition={{ duration: 1.2, ease: 'easeOut' }}
-            className="space-y-2.5"
+            initial={{ opacity: 0, y: 15 }}
+            animate={step >= 2 ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 1 }}
           >
-            <p className="font-kalam text-xl sm:text-2xl text-[#ffd54f] font-bold tracking-wide">
+            <p className="mb-2 font-kalam text-2xl font-bold text-[#f2cf80]">
               {GREETING_LETTER.salutation}
             </p>
-            <p className="text-left sm:text-justify text-[#f5e6cc]/95 leading-relaxed">
-              {GREETING_LETTER.personalWish}
-            </p>
+            <p>{GREETING_LETTER.personalWish}</p>
           </motion.div>
 
-          {/* Paragraph 2: Family Wishes */}
           <motion.div
-            initial={{ opacity: 0, y: 15, filter: 'blur(4px)' }}
-            animate={step >= 3 ? { opacity: 1, y: 0, filter: 'blur(0px)' } : {}}
-            transition={{ duration: 1.2, ease: 'easeOut' }}
-            className="pt-2"
+            initial={{ opacity: 0, y: 15 }}
+            animate={step >= 3 ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 1 }}
           >
-            <div className="w-20 h-px bg-gradient-to-r from-transparent via-[#d4af37]/40 to-transparent mx-auto mb-4" />
-            <p className="text-left sm:text-justify text-[#f5e6cc]/95 leading-relaxed">
-              {GREETING_LETTER.familyWish}
-            </p>
+            <div className="mx-auto mb-5 h-px w-24 bg-[#e8c77d]/40" />
+            <p>{GREETING_LETTER.familyWish}</p>
           </motion.div>
 
-          {/* Paragraph 3: Final Festive Greeting Callout Card */}
           <motion.div
-            initial={{ opacity: 0, y: 15, filter: 'blur(4px)' }}
-            animate={step >= 4 ? { opacity: 1, y: 0, filter: 'blur(0px)' } : {}}
-            transition={{ duration: 1.2, ease: 'easeOut' }}
-            className="p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-[#241206]/85 via-[#341808]/80 to-[#1f0d04]/85 border border-[#ffd54f]/35 shadow-[0_0_30px_rgba(255,183,77,0.12)] text-left"
+            initial={{ opacity: 0, y: 15 }}
+            animate={step >= 4 ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 1 }}
+            className="rounded-2xl border border-[#e8c77d]/30 bg-[#f2cf80]/10 p-5 text-[#fff1d2] sm:p-6"
           >
-            <p className="text-[#fff4d0] font-medium leading-relaxed">
-              {GREETING_LETTER.finalGreeting}
-            </p>
+            {GREETING_LETTER.finalGreeting}
           </motion.div>
 
-          {/* Signature */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
+            initial={{ opacity: 0, scale: 0.9 }}
             animate={step >= 5 ? { opacity: 1, scale: 1 } : {}}
-            transition={{ duration: 1.0 }}
-            className="pt-4 border-t border-[#d4af37]/25 flex flex-col items-center text-center"
+            className="border-t border-[#e8c77d]/25 pt-6 text-center"
           >
-            <span className="font-kalam text-2xl sm:text-3xl text-[#f5b041] tracking-wide font-bold">
+            <p className="font-kalam text-3xl font-bold text-[#e8c77d]">
               — Rajat
-            </span>
-            <div className="flex items-center gap-1.5 text-xs text-[#d4af37]/80 font-cinzel mt-1">
-              <Heart className="w-3 h-3 text-[#ff7043] fill-[#ff7043]" />
-              <span>With festive warmth & heartfelt blessings</span>
-            </div>
+            </p>
+            <p className="mt-2 flex items-center justify-center gap-2 text-xs text-[#d9c49e]">
+              <Heart size={13} className="fill-[#d98a91] text-[#d98a91]" />
+              With festive warmth and best wishes
+            </p>
           </motion.div>
         </div>
 
-        {/* Bottom Button to Keepsake */}
-        <div className="mt-8 pt-2 min-h-[55px] flex items-center justify-center">
+        <div className="mt-8 flex min-h-14 justify-center">
           {canProceed && (
             <motion.button
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.96 }}
               onClick={onNext}
-              className="px-8 py-3.5 rounded-full bg-gradient-to-r from-[#b37d2a] via-[#f5b041] to-[#b37d2a] text-[#0d0702] font-cinzel text-xs sm:text-sm font-bold tracking-[0.2em] uppercase box-gold-glow-active transition-all cursor-pointer flex items-center gap-3 border border-[#fff2b2]"
+              className="flex items-center gap-3 rounded-full border border-[#fff0c7]/70 bg-gradient-to-r from-[#b77c38] via-[#f0ce83] to-[#b77c38] px-7 py-3.5 text-xs font-bold tracking-[0.15em] text-[#25152b] shadow-[0_0_30px_rgba(232,199,125,0.2)] sm:text-sm"
             >
-              <span>CLAIM YOUR DIGITAL KEEPSAKE</span>
-              <ArrowRight className="w-4 h-4 text-[#0d0702]" />
+              CLAIM YOUR DIGITAL KEEPSAKE
+              <ArrowRight size={17} />
             </motion.button>
           )}
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };
