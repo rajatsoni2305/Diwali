@@ -9,16 +9,17 @@ interface Props {
 export const SceneSurpriseReveal: React.FC<Props> = memo(({ onNext }) => {
   const handleContinue = () => {
     try {
-      soundEffects.play('chime');
-    } catch (e) {
-      // fallback
+      if (typeof (soundEffects as any)?.play === 'function') {
+        (soundEffects as any).play('click');
+      }
+    } catch {
+      // safe no-op
     }
     onNext();
   };
 
   return (
     <div className="relative min-h-screen w-full flex flex-col items-center justify-center px-4 sm:px-8 text-center select-none pt-20 pb-32">
-      {/* Tiered Diya Array Visual */}
       <motion.div
         initial={{ opacity: 0, scale: 0.85 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -27,26 +28,22 @@ export const SceneSurpriseReveal: React.FC<Props> = memo(({ onNext }) => {
       >
         <div className="absolute inset-0 bg-amber-500/25 blur-3xl rounded-full" />
 
-        {/* Tier 1 (Top Pair) */}
         <div className="flex space-x-10 mb-4">
           <div className="w-3.5 h-5 bg-yellow-200 rounded-full animate-flame-real" />
           <div className="w-3.5 h-5 bg-yellow-200 rounded-full animate-flame-real" />
         </div>
 
-        {/* Tier 2 (Central Hero Diya) */}
         <div className="relative z-10 flex flex-col items-center scale-160 mb-5">
           <div className="w-4 h-7 bg-gradient-to-t from-orange-500 via-yellow-200 to-white rounded-full animate-flame-real shadow-[0_0_30px_#f59e0b]" />
           <div className="w-10 h-5 bg-gradient-to-b from-amber-700 to-amber-950 rounded-b-full border-t border-amber-400 shadow-xl" />
         </div>
 
-        {/* Tier 3 (Bottom Arc) */}
         <div className="flex space-x-12">
           <div className="w-4 h-5 bg-yellow-200 rounded-full animate-flame-real" />
           <div className="w-4 h-5 bg-yellow-200 rounded-full animate-flame-real" />
         </div>
       </motion.div>
 
-      {/* Typography */}
       <motion.div
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
@@ -62,7 +59,6 @@ export const SceneSurpriseReveal: React.FC<Props> = memo(({ onNext }) => {
         </p>
       </motion.div>
 
-      {/* Button */}
       <motion.button
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
