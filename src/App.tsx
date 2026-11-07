@@ -1,12 +1,24 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
 
-// Global Overlays
-import { FestiveDecor } from './components/FestiveDecor';
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+import React, { useState } from 'react';
+import { AnimatePresence, motion } from 'motion/react';
+import { Lock } from 'lucide-react';
+import { SceneId } from './types/scenes';
+
 import { AtmosphereCanvas } from './components/AtmosphereCanvas';
+import FestiveDecor from './components/FestiveDecor';
+
+import { AdminDashboard } from './components/admin/AdminDashboard';
 import { RecordingConsentModal } from './components/recording/RecordingConsentModal';
 import { RecordingIndicator } from './components/recording/RecordingIndicator';
 
-// Original Story Narrative Scenes
+import { sessionService } from './services/sessionService';
+
+// All Scenes
 import { Scene1DarkOpening } from './components/scenes/Scene1DarkOpening';
 import { Scene2Rocket } from './components/scenes/Scene2Rocket';
 import { Scene3Fireworks } from './components/scenes/Scene3Fireworks';
@@ -26,105 +38,220 @@ import { Scene16MemoryRoom } from './components/scenes/Scene16MemoryRoom';
 import { Scene17WishLantern } from './components/scenes/Scene17WishLantern';
 import { Scene18FinalGreeting } from './components/scenes/Scene18FinalGreeting';
 import { Scene19DigitalKeepsake } from './components/scenes/Scene19DigitalKeepsake';
-import { Scene19bReactionRecording } from './components/scenes/Scene19bReactionRecording';
 import { Scene20Revisit } from './components/scenes/Scene20Revisit';
 
-// The 7 Screenshot Variation Scenes
-import { SceneDiyaHeart } from './components/scenes/SceneDiyaHeart';
-import { SceneGrandThali } from './components/scenes/SceneGrandThali';
-import { SceneHangingLanterns } from './components/scenes/SceneHangingLanterns';
-import { SceneInteractiveCrackers } from './components/scenes/SceneInteractiveCrackers';
-import { SceneGiftHamper } from './components/scenes/SceneGiftHamper';
-import { SceneFairyLightsJar } from './components/scenes/SceneFairyLightsJar';
-import { SceneSurpriseReveal } from './components/scenes/SceneSurpriseReveal';
+const SCENE_FLOW: SceneId[] = [
+  'dark_opening',
+  'rocket_launch',
+  'golden_fireworks',
+  'opening_shayari',
+  'personal_intro',
+  'journey_map',
+  'dharma_courage',
+  'faith_devotion',
+  'unity_loyalty',
+  'ayodhya_reveal',
+  'homecoming',
+  'royal_gates',
+  'diwali_celebration',
+  'diya_challenge',
+  'secret_door',
+  'memory_room',
+  'wish_lantern',
+  'final_greeting',
+  'digital_keepsake',
+  'revisit',
+];
 
-// Backend Services
-import { sessionService } from './services/sessionService';
-import { recordingManager } from './services/recordingManager';
+export default function App() {
+  const [hasGivenConsentChoice, setHasGivenConsentChoice] = useState(false);
+  const [currentScene, setCurrentScene] = useState<SceneId>('dark_opening');
+  const [showAdmin, setShowAdmin] = useState(false);
 
-export const App: React.FC = () => {
-  const [currentSceneIndex, setCurrentSceneIndex] = useState(0);
-  const [sessionData, setSessionData] = useState<any>(null);
-  const [hasConsent, setHasConsent] = useState(false);
-  const [isRecording, setIsRecording] = useState(false);
+  const goToNextScene = () => {
+    const currentIndex = SCENE_FLOW.indexOf(currentScene);
 
-  useEffect(() => {
-    const initSession = async () => {
-      try {
-        const data = await sessionService.getCurrentSession();
-        setSessionData(data);
-      } catch (err) {
-        console.warn('Session initialized with default profile', err);
-      }
-    };
-    initSession();
-  }, []);
-
-  const handleNext = useCallback(() => {
-    setCurrentSceneIndex((prev) => Math.min(prev + 1, 26));
-  }, []);
-
-  const handleRecordingConsent = useCallback(async (consent: boolean) => {
-    setHasConsent(consent);
-    if (consent) {
-      try {
-        await recordingManager.startRecording();
-        setIsRecording(true);
-      } catch (e) {
-        console.warn('Recording permission bypassed:', e);
-      }
+    if (currentIndex >= 0 && currentIndex < SCENE_FLOW.length - 1) {
+      setCurrentScene(SCENE_FLOW[currentIndex + 1]);
     }
-  }, []);
+  };
 
-  const scenes = useMemo(() => [
-    <Scene1DarkOpening key="s1" onNext={handleNext} />,
-    <SceneDiyaHeart key="s-heart" onNext={handleNext} recipientName={sessionData?.recipientName} />,
-    <Scene2Rocket key="s2" onNext={handleNext} />,
-    <Scene3Fireworks key="s3" onNext={handleNext} />,
-    <SceneGrandThali key="s-thali" onNext={handleNext} recipientName={sessionData?.recipientName} senderName={sessionData?.senderName} />,
-    <Scene4Shayari key="s4" onNext={handleNext} customShayari={sessionData?.shayari} />,
-    <Scene5PersonalIntro key="s5" onNext={handleNext} />,
-    <SceneFairyLightsJar key="s-jar" onNext={handleNext} />,
-    <Scene6JourneyMap key="s6" onNext={handleNext} />,
-    <Scene7DharmaCourage key="s7" onNext={handleNext} />,
-    <SceneHangingLanterns key="s-lanterns" onNext={handleNext} />,
-    <Scene8FaithDevotion key="s8" onNext={handleNext} />,
-    <Scene9UnityLoyalty key="s9" onNext={handleNext} />,
-    <Scene10AyodhyaReveal key="s10" onNext={handleNext} />,
-    <SceneInteractiveCrackers key="s-crackers" onNext={handleNext} />,
-    <Scene11Homecoming key="s11" onNext={handleNext} />,
-    <Scene12RoyalGates key="s12" onNext={handleNext} />,
-    <Scene13DiwaliCelebration key="s13" onNext={handleNext} />,
-    <SceneGiftHamper key="s-hamper" onNext={handleNext} />,
-    <Scene14DiyaChallenge key="s14" onNext={handleNext} />,
-    <Scene15SecretDoor key="s15" onNext={handleNext} />,
-    <SceneSurpriseReveal key="s-surprise" onNext={handleNext} />,
-    <Scene16MemoryRoom key="s16" onNext={handleNext} photos={sessionData?.photos} recipientName={sessionData?.recipientName} />,
-    <Scene17WishLantern key="s17" onNext={handleNext} />,
-    <Scene18FinalGreeting key="s18" onNext={handleNext} />,
-    <Scene19DigitalKeepsake key="s19" onNext={handleNext} />,
-    <Scene19bReactionRecording key="s19b" onNext={handleNext} />,
-    <Scene20Revisit key="s20" onNext={handleNext} />
-  ], [handleNext, sessionData]);
+  const handleRestart = () => {
+    // Reset the diya progress for a fresh run.
+    try {
+      sessionStorage.removeItem('tanisha_diwali_lit_diyas_v1');
+    } catch {
+      // Session storage may be unavailable in some browser modes.
+    }
+
+    sessionService.resetSession();
+    setCurrentScene('dark_opening');
+  };
+
+  const getIntensity = (): 'dark' | 'subtle' | 'rich' | 'celebration' => {
+    if (currentScene === 'dark_opening') {
+      return 'dark';
+    }
+
+    if (
+      currentScene === 'rocket_launch' ||
+      currentScene === 'golden_fireworks' ||
+      currentScene === 'diwali_celebration'
+    ) {
+      return 'celebration';
+    }
+
+    if (
+      currentScene === 'dharma_courage' ||
+      currentScene === 'faith_devotion'
+    ) {
+      return 'subtle';
+    }
+
+    return 'rich';
+  };
+
+  const getDecorationVariant = (): 'full' | 'subtle' => {
+    if (
+      currentScene === 'dark_opening' ||
+      currentScene === 'dharma_courage' ||
+      currentScene === 'faith_devotion'
+    ) {
+      return 'subtle';
+    }
+
+    return 'full';
+  };
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden flex flex-col justify-between">
-      <AtmosphereCanvas />
-      <FestiveDecor />
-      {isRecording && <RecordingIndicator />}
+    <div className="relative isolate w-full min-h-screen bg-[#070503] text-[#F7E7CE] overflow-x-hidden select-none">
+      {/* Existing golden particle atmosphere */}
+      <AtmosphereCanvas intensity={getIntensity()} />
 
-      <main className="relative z-20 flex-1 flex flex-col justify-center items-center w-full">
-        {scenes[currentSceneIndex]}
-      </main>
+      {/* Festive visual layer */}
+      <FestiveDecor variant={getDecorationVariant()} />
 
-      {!hasConsent && (
+      {/* Existing recording indicator */}
+      <RecordingIndicator />
+
+      {/* Initial explicit permission consent screen */}
+      {!hasGivenConsentChoice && (
         <RecordingConsentModal
-          onConfirm={() => handleRecordingConsent(true)}
-          onSkip={() => handleRecordingConsent(false)}
+          onStartQuest={() => setHasGivenConsentChoice(true)}
         />
       )}
+
+      {/* Admin lock button */}
+      <div className="fixed top-4 right-4 z-[60]">
+        <button
+          onClick={() => setShowAdmin(true)}
+          title="Admin View"
+          aria-label="Open admin view"
+          className="p-2 rounded-full bg-[#140b04]/50 border border-[#d4af37]/30 text-[#d4af37]/60 hover:text-[#ffd54f] hover:border-[#ffd54f] hover:bg-[#201007] transition-all cursor-pointer backdrop-blur-xs"
+        >
+          <Lock className="w-3.5 h-3.5" />
+        </button>
+      </div>
+
+      {/* Existing admin dashboard */}
+      <AdminDashboard
+        isOpen={showAdmin}
+        onClose={() => setShowAdmin(false)}
+      />
+
+      {/* Main scene container */}
+      <main className="relative z-30 w-full min-h-screen">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentScene}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.9, ease: 'easeInOut' }}
+            className="w-full min-h-screen"
+          >
+            {currentScene === 'dark_opening' && (
+              <Scene1DarkOpening onNext={goToNextScene} />
+            )}
+
+            {currentScene === 'rocket_launch' && (
+              <Scene2Rocket onNext={goToNextScene} />
+            )}
+
+            {currentScene === 'golden_fireworks' && (
+              <Scene3Fireworks onNext={goToNextScene} />
+            )}
+
+            {currentScene === 'opening_shayari' && (
+              <Scene4Shayari onNext={goToNextScene} />
+            )}
+
+            {currentScene === 'personal_intro' && (
+              <Scene5PersonalIntro onNext={goToNextScene} />
+            )}
+
+            {currentScene === 'journey_map' && (
+              <Scene6JourneyMap onNext={goToNextScene} />
+            )}
+
+            {currentScene === 'dharma_courage' && (
+              <Scene7DharmaCourage onNext={goToNextScene} />
+            )}
+
+            {currentScene === 'faith_devotion' && (
+              <Scene8FaithDevotion onNext={goToNextScene} />
+            )}
+
+            {currentScene === 'unity_loyalty' && (
+              <Scene9UnityLoyalty onNext={goToNextScene} />
+            )}
+
+            {currentScene === 'ayodhya_reveal' && (
+              <Scene10AyodhyaReveal onNext={goToNextScene} />
+            )}
+
+            {currentScene === 'homecoming' && (
+              <Scene11Homecoming onNext={goToNextScene} />
+            )}
+
+            {currentScene === 'royal_gates' && (
+              <Scene12RoyalGates onNext={goToNextScene} />
+            )}
+
+            {currentScene === 'diwali_celebration' && (
+              <Scene13DiwaliCelebration onNext={goToNextScene} />
+            )}
+
+            {currentScene === 'diya_challenge' && (
+              <Scene14DiyaChallenge onNext={goToNextScene} />
+            )}
+
+            {currentScene === 'secret_door' && (
+              <Scene15SecretDoor onNext={goToNextScene} />
+            )}
+
+            {currentScene === 'memory_room' && (
+              <Scene16MemoryRoom onNext={goToNextScene} />
+            )}
+
+            {currentScene === 'wish_lantern' && (
+              <Scene17WishLantern onNext={goToNextScene} />
+            )}
+
+            {currentScene === 'final_greeting' && (
+              <Scene18FinalGreeting onNext={goToNextScene} />
+            )}
+
+            {currentScene === 'digital_keepsake' && (
+              <Scene19DigitalKeepsake onNext={goToNextScene} />
+            )}
+
+            {currentScene === 'revisit' && (
+              <Scene20Revisit onRestart={handleRestart} />
+            )}
+          </motion.div>
+        </AnimatePresence>
+      </main>
     </div>
   );
-};
-
-export default App;
+}
