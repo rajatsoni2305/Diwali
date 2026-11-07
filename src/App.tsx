@@ -76,7 +76,6 @@ export const App: React.FC = () => {
     }
   }, []);
 
-  // Interlacing sequence: 20 story scenes + 7 high-brightness variations = 27 scenes
   const scenes = useMemo(() => [
     <Scene1DarkOpening key="s1" onNext={handleNext} />,
     <SceneDiyaHeart key="s-heart" onNext={handleNext} recipientName={sessionData?.recipientName} />,
