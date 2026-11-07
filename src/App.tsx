@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 
-// Global Atmosphere & Overlays
+// Global Overlays
 import { FestiveDecor } from './components/FestiveDecor';
 import { AtmosphereCanvas } from './components/AtmosphereCanvas';
 import { RecordingConsentModal } from './components/recording/RecordingConsentModal';
 import { RecordingIndicator } from './components/recording/RecordingIndicator';
 
-// Original Story Arc Scenes
+// Original Story Narrative Scenes
 import { Scene1DarkOpening } from './components/scenes/Scene1DarkOpening';
 import { Scene2Rocket } from './components/scenes/Scene2Rocket';
 import { Scene3Fireworks } from './components/scenes/Scene3Fireworks';
@@ -29,7 +29,7 @@ import { Scene19DigitalKeepsake } from './components/scenes/Scene19DigitalKeepsa
 import { Scene19bReactionRecording } from './components/scenes/Scene19bReactionRecording';
 import { Scene20Revisit } from './components/scenes/Scene20Revisit';
 
-// The 7 Newly Added Screenshot Variations
+// The 7 Screenshot Variation Scenes
 import { SceneDiyaHeart } from './components/scenes/SceneDiyaHeart';
 import { SceneGrandThali } from './components/scenes/SceneGrandThali';
 import { SceneHangingLanterns } from './components/scenes/SceneHangingLanterns';
@@ -38,7 +38,7 @@ import { SceneGiftHamper } from './components/scenes/SceneGiftHamper';
 import { SceneFairyLightsJar } from './components/scenes/SceneFairyLightsJar';
 import { SceneSurpriseReveal } from './components/scenes/SceneSurpriseReveal';
 
-// Essential Backend Services (Firebase & Cloudinary Preserved)
+// Backend Services
 import { sessionService } from './services/sessionService';
 import { recordingManager } from './services/recordingManager';
 
@@ -54,81 +54,74 @@ export const App: React.FC = () => {
         const data = await sessionService.getCurrentSession();
         setSessionData(data);
       } catch (err) {
-        console.warn('Session loaded with default settings', err);
+        console.warn('Session initialized with default profile', err);
       }
     };
     initSession();
   }, []);
 
-  const handleNext = () => {
-    setCurrentSceneIndex((prev) => Math.min(prev + 1, scenes.length - 1));
-  };
+  const handleNext = useCallback(() => {
+    setCurrentSceneIndex((prev) => Math.min(prev + 1, 26));
+  }, []);
 
-  const handleRecordingConsent = async (consent: boolean) => {
+  const handleRecordingConsent = useCallback(async (consent: boolean) => {
     setHasConsent(consent);
     if (consent) {
       try {
         await recordingManager.startRecording();
         setIsRecording(true);
       } catch (e) {
-        console.warn('Recording access not permitted:', e);
+        console.warn('Recording permission bypassed:', e);
       }
     }
-  };
+  }, []);
 
-  // Harmoniously interlaced sequence: (Original 20 + 7 New Variations = 27 Grand Scenes)
-  const scenes = [
-    <Scene1DarkOpening onNext={handleNext} />,
-    <SceneDiyaHeart onNext={handleNext} recipientName={sessionData?.recipientName} />,
-    <Scene2Rocket onNext={handleNext} />,
-    <Scene3Fireworks onNext={handleNext} />,
-    <SceneGrandThali onNext={handleNext} recipientName={sessionData?.recipientName} senderName={sessionData?.senderName} />,
-    <Scene4Shayari onNext={handleNext} customShayari={sessionData?.shayari} />,
-    <Scene5PersonalIntro onNext={handleNext} />,
-    <SceneFairyLightsJar onNext={handleNext} />,
-    <Scene6JourneyMap onNext={handleNext} />,
-    <Scene7DharmaCourage onNext={handleNext} />,
-    <SceneHangingLanterns onNext={handleNext} />,
-    <Scene8FaithDevotion onNext={handleNext} />,
-    <Scene9UnityLoyalty onNext={handleNext} />,
-    <Scene10AyodhyaReveal onNext={handleNext} />,
-    <SceneInteractiveCrackers onNext={handleNext} />,
-    <Scene11Homecoming onNext={handleNext} />,
-    <Scene12RoyalGates onNext={handleNext} />,
-    <Scene13DiwaliCelebration onNext={handleNext} />,
-    <SceneGiftHamper onNext={handleNext} />,
-    <Scene14DiyaChallenge onNext={handleNext} />,
-    <Scene15SecretDoor onNext={handleNext} />,
-    <SceneSurpriseReveal onNext={handleNext} />,
-    <Scene16MemoryRoom onNext={handleNext} photos={sessionData?.photos} recipientName={sessionData?.recipientName} />,
-    <Scene17WishLantern onNext={handleNext} />,
-    <Scene18FinalGreeting onNext={handleNext} />,
-    <Scene19DigitalKeepsake onNext={handleNext} />,
-    <Scene19bReactionRecording onNext={handleNext} />,
-    <Scene20Revisit onNext={handleNext} />
-  ];
+  // Interlacing sequence: 20 story scenes + 7 high-brightness variations = 27 scenes
+  const scenes = useMemo(() => [
+    <Scene1DarkOpening key="s1" onNext={handleNext} />,
+    <SceneDiyaHeart key="s-heart" onNext={handleNext} recipientName={sessionData?.recipientName} />,
+    <Scene2Rocket key="s2" onNext={handleNext} />,
+    <Scene3Fireworks key="s3" onNext={handleNext} />,
+    <SceneGrandThali key="s-thali" onNext={handleNext} recipientName={sessionData?.recipientName} senderName={sessionData?.senderName} />,
+    <Scene4Shayari key="s4" onNext={handleNext} customShayari={sessionData?.shayari} />,
+    <Scene5PersonalIntro key="s5" onNext={handleNext} />,
+    <SceneFairyLightsJar key="s-jar" onNext={handleNext} />,
+    <Scene6JourneyMap key="s6" onNext={handleNext} />,
+    <Scene7DharmaCourage key="s7" onNext={handleNext} />,
+    <SceneHangingLanterns key="s-lanterns" onNext={handleNext} />,
+    <Scene8FaithDevotion key="s8" onNext={handleNext} />,
+    <Scene9UnityLoyalty key="s9" onNext={handleNext} />,
+    <Scene10AyodhyaReveal key="s10" onNext={handleNext} />,
+    <SceneInteractiveCrackers key="s-crackers" onNext={handleNext} />,
+    <Scene11Homecoming key="s11" onNext={handleNext} />,
+    <Scene12RoyalGates key="s12" onNext={handleNext} />,
+    <Scene13DiwaliCelebration key="s13" onNext={handleNext} />,
+    <SceneGiftHamper key="s-hamper" onNext={handleNext} />,
+    <Scene14DiyaChallenge key="s14" onNext={handleNext} />,
+    <Scene15SecretDoor key="s15" onNext={handleNext} />,
+    <SceneSurpriseReveal key="s-surprise" onNext={handleNext} />,
+    <Scene16MemoryRoom key="s16" onNext={handleNext} photos={sessionData?.photos} recipientName={sessionData?.recipientName} />,
+    <Scene17WishLantern key="s17" onNext={handleNext} />,
+    <Scene18FinalGreeting key="s18" onNext={handleNext} />,
+    <Scene19DigitalKeepsake key="s19" onNext={handleNext} />,
+    <Scene19bReactionRecording key="s19b" onNext={handleNext} />,
+    <Scene20Revisit key="s20" onNext={handleNext} />
+  ], [handleNext, sessionData]);
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden flex flex-col justify-between">
-      {/* Background Interactive Particles */}
       <AtmosphereCanvas />
-
-      {/* Persistent Fairy Lights & Bottom Rangoli Border */}
       <FestiveDecor />
-
-      {/* Top Recording Status */}
       {isRecording && <RecordingIndicator />}
 
-      {/* Main Flow Content */}
       <main className="relative z-20 flex-1 flex flex-col justify-center items-center w-full">
         {scenes[currentSceneIndex]}
       </main>
 
-      {/* Privacy Consent Dialog */}
       {!hasConsent && (
-        <RecordingConsentModal 
-          onConfirm={() => handleRecordingConsent(true)} 
-          onSkip={() => handleRecordingConsent(false)} 
+        <RecordingConsentModal
+          onConfirm={() => handleRecordingConsent(true)}
+          onSkip={() => handleRecordingConsent(false)}
         />
       )}
     </div>
