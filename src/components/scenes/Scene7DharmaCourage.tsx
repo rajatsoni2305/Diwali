@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { ArrowRight, Leaf, Shield } from 'lucide-react';
@@ -7,82 +8,71 @@ interface SceneProps {
 }
 
 export const Scene7DharmaCourage: React.FC<SceneProps> = ({ onNext }) => {
-  const [stage, setStage] = useState<number>(0);
+  const [stage, setStage] = useState(0);
 
   useEffect(() => {
-    const t1 = setTimeout(() => setStage(1), 800);
-    const t2 = setTimeout(() => setStage(2), 3400);
-    const t3 = setTimeout(() => setStage(3), 5200);
-
-    return () => {
-      clearTimeout(t1);
-      clearTimeout(t2);
-      clearTimeout(t3);
-    };
+    const timers = [
+      setTimeout(() => setStage(1), 800),
+      setTimeout(() => setStage(2), 3400),
+      setTimeout(() => setStage(3), 5200),
+    ];
+    return () => timers.forEach(clearTimeout);
   }, []);
 
   return (
-    <div className="relative w-full h-full min-h-screen bg-[#060a06] flex flex-col items-center justify-center px-4 sm:px-6 py-12 select-none overflow-hidden">
-      {/* Mystical Dandakaranya Forest Atmosphere */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(25,50,25,0.45)_0%,rgba(6,10,6,1)_85%)] pointer-events-none" />
+    <div className="relative isolate flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-[#101b17] px-5 py-12">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_15%,rgba(90,125,76,.3),transparent_60%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-[#0b1511]/20 to-[#07100d]" />
 
-      {/* Atmospheric God-Rays (Sunbeams through canopy) */}
-      <div className="absolute inset-0 pointer-events-none opacity-30 overflow-hidden">
-        <div className="absolute -top-32 left-1/4 w-[600px] h-[800px] bg-gradient-to-b from-[#ffd700]/30 via-[#2e7d32]/10 to-transparent rotate-12 blur-3xl" />
-        <div className="absolute -top-20 right-1/3 w-[400px] h-[700px] bg-gradient-to-b from-[#ffe57f]/25 to-transparent -rotate-15 blur-2xl" />
-      </div>
-
-      {/* Ancient Tree Silhouettes */}
-      <div className="absolute inset-x-0 bottom-0 h-64 pointer-events-none opacity-40 flex justify-between items-end">
-        <svg viewBox="0 0 1000 300" className="w-full h-full object-cover text-[#0d1f0d]" fill="currentColor">
-          <path d="M0,300 L0,180 Q80,140 120,190 T240,160 Q300,90 350,180 T500,200 Q620,110 700,200 T850,150 Q920,80 1000,170 L1000,300 Z" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-56 opacity-40">
+        <svg viewBox="0 0 1000 300" preserveAspectRatio="none" className="h-full w-full">
+          <path d="M0 300V180Q70 100 150 180T300 155Q390 55 480 175T650 165Q760 55 850 165T1000 130V300Z" fill="#10291c" />
+          <path d="M0 300V240Q150 165 300 245T600 225Q800 150 1000 230V300Z" fill="#09140e" />
         </svg>
       </div>
 
-      {/* Content Card */}
-      <div className="relative z-10 max-w-2xl w-full text-center p-6 sm:p-12 rounded-3xl bg-[#0a120a]/75 backdrop-blur-md border border-[#4caf50]/30 shadow-[0_0_60px_rgba(0,0,0,0.85)]">
-        {/* Stage Tag */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#132213] border border-[#81c784]/30 text-[#a5d6a7] text-xs font-cinzel tracking-widest uppercase mb-8">
-          <Leaf className="w-3.5 h-3.5 text-[#81c784]" />
-          <span>Stage I — Dandakaranya</span>
-          <Shield className="w-3.5 h-3.5 text-[#81c784]" />
+      <div className="pointer-events-none absolute -left-12 top-16 h-64 w-64 rounded-full bg-[#d3b36c]/10 blur-[90px]" />
+      <div className="pointer-events-none absolute -right-16 bottom-20 h-72 w-72 rounded-full bg-[#709c69]/10 blur-[100px]" />
+
+      <div className="relative z-10 w-full max-w-2xl rounded-[28px] border border-[#b8c895]/25 bg-[#14231b]/80 px-6 py-10 text-center shadow-[0_25px_80px_rgba(0,0,0,.5)] backdrop-blur-xl sm:px-12 sm:py-14">
+        <div className="mb-9 inline-flex items-center gap-3 rounded-full border border-[#b6ca9a]/30 bg-[#203629] px-4 py-2 text-[10px] uppercase tracking-[.18em] text-[#d1e0b7] sm:text-xs">
+          <Leaf className="h-4 w-4" />
+          Stage I — Dandakaranya
+          <Shield className="h-4 w-4" />
         </div>
 
-        {/* Message 1 */}
-        <div className="space-y-6 min-h-[160px] flex flex-col justify-center">
+        <div className="flex min-h-[190px] flex-col justify-center gap-7">
           <motion.p
-            initial={{ opacity: 0, y: 15, filter: 'blur(8px)' }}
+            initial={{ opacity: 0, y: 18, filter: 'blur(8px)' }}
             animate={stage >= 1 ? { opacity: 1, y: 0, filter: 'blur(0px)' } : {}}
-            transition={{ duration: 1.5, ease: 'easeOut' }}
-            className="font-cinzel text-lg sm:text-2xl md:text-3xl text-[#e8f5e9] leading-relaxed tracking-wide gold-glow"
+            transition={{ duration: 1.5 }}
+            className="font-cinzel text-lg leading-relaxed text-[#f0edda] gold-glow sm:text-2xl md:text-3xl"
           >
             "Dharma is not merely knowing what is right. It is having the courage to stand by what is right."
           </motion.p>
 
-          {/* Message 2 */}
           <motion.p
-            initial={{ opacity: 0, y: 12, filter: 'blur(6px)' }}
+            initial={{ opacity: 0, y: 15, filter: 'blur(7px)' }}
             animate={stage >= 2 ? { opacity: 1, y: 0, filter: 'blur(0px)' } : {}}
-            transition={{ duration: 1.5, ease: 'easeOut' }}
-            className="font-marcellus text-base sm:text-xl text-[#c8e6c9] leading-relaxed italic"
+            transition={{ duration: 1.5 }}
+            className="font-marcellus text-base italic leading-relaxed text-[#cbd9bd] sm:text-xl"
           >
             "Choose what is right, even when it is not the easiest choice."
           </motion.p>
         </div>
 
-        {/* Continue Button */}
-        <div className="mt-10 pt-4 flex justify-center min-h-[50px]">
+        <div className="mt-10 flex min-h-14 justify-center">
           {stage >= 3 && (
             <motion.button
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              initial={{ opacity: 0, scale: 0.9, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.96 }}
               onClick={onNext}
-              className="px-7 py-3 rounded-full bg-gradient-to-r from-[#2e7d32] via-[#43a047] to-[#1b5e20] text-[#f1f8e9] font-cinzel text-xs sm:text-sm font-bold tracking-widest uppercase shadow-[0_0_25px_rgba(76,175,80,0.4)] flex items-center gap-2 cursor-pointer border border-[#a5d6a7]/40"
+              className="flex items-center gap-3 rounded-full border border-[#c3d5ad]/40 bg-gradient-to-r from-[#355c3d] via-[#61865a] to-[#355c3d] px-7 py-3 font-cinzel text-xs font-bold uppercase tracking-widest text-[#f3f2df] shadow-[0_0_30px_rgba(105,160,100,.2)] sm:text-sm"
             >
-              <span>Venture to the Ocean</span>
-              <ArrowRight className="w-4 h-4" />
+              Venture to the Ocean
+              <ArrowRight className="h-4 w-4" />
             </motion.button>
           )}
         </div>
