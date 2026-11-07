@@ -15,24 +15,28 @@ export const Scene16MemoryRoom: React.FC<Props> = memo(({
 }) => {
   const [photoIndex, setPhotoIndex] = useState(0);
 
-  const displayPhotos = photos.length > 0 ? photos : [
+  const displayPhotos = photos && photos.length > 0 ? photos : [
     'https://images.unsplash.com/photo-1513151233558-d860c5398176?q=80&w=800&auto=format&fit=crop'
   ];
 
   const handleNextPhoto = () => {
     try {
-      soundEffects.play('swipe');
-    } catch (e) {
-      // fallback
+      if (typeof (soundEffects as any)?.play === 'function') {
+        (soundEffects as any).play('click');
+      }
+    } catch {
+      // safe no-op
     }
     setPhotoIndex((prev) => (prev + 1) % displayPhotos.length);
   };
 
   const handleContinue = () => {
     try {
-      soundEffects.play('chime');
-    } catch (e) {
-      // fallback
+      if (typeof (soundEffects as any)?.play === 'function') {
+        (soundEffects as any).play('click');
+      }
+    } catch {
+      // safe no-op
     }
     onNext();
   };
@@ -53,14 +57,12 @@ export const Scene16MemoryRoom: React.FC<Props> = memo(({
         </p>
       </motion.div>
 
-      {/* Ornate Glowing Photo Frame */}
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.9 }}
         className="relative p-4 rounded-[32px] bg-gradient-to-b from-amber-300 via-amber-600 to-yellow-950 shadow-[0_0_45px_rgba(245,158,11,0.7)] max-w-sm sm:max-w-md w-full mb-6 z-10"
       >
-        {/* Glowing Corner Studs */}
         <div className="absolute top-3 left-3 w-4 h-4 rounded-full bg-yellow-200 shadow-[0_0_12px_#fef08a] animate-ping" />
         <div className="absolute top-3 right-3 w-4 h-4 rounded-full bg-yellow-200 shadow-[0_0_12px_#fef08a] animate-ping" />
         <div className="absolute bottom-3 left-3 w-4 h-4 rounded-full bg-yellow-200 shadow-[0_0_12px_#fef08a] animate-ping" />
@@ -93,7 +95,6 @@ export const Scene16MemoryRoom: React.FC<Props> = memo(({
         </motion.button>
       )}
 
-      {/* Embedded Shayari Card */}
       <motion.div
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
@@ -118,7 +119,6 @@ export const Scene16MemoryRoom: React.FC<Props> = memo(({
         </p>
       </motion.div>
 
-      {/* Button */}
       <motion.button
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
