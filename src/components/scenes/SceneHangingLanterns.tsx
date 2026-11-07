@@ -9,24 +9,23 @@ interface Props {
 export const SceneHangingLanterns: React.FC<Props> = memo(({ onNext }) => {
   const handleContinue = () => {
     try {
-      soundEffects.play('click');
-    } catch (e) {
-      // fallback
+      if (typeof (soundEffects as any)?.play === 'function') {
+        (soundEffects as any).play('click');
+      }
+    } catch {
+      // safe no-op
     }
     onNext();
   };
 
   return (
     <div className="relative min-h-screen w-full flex flex-col items-center justify-center px-4 sm:px-8 text-center select-none pt-20 pb-32">
-      {/* Background Sacred Geometric Mandala */}
       <div className="relative w-80 h-80 sm:w-96 sm:h-96 flex items-center justify-center mb-8">
         <div className="absolute inset-0 rounded-full border border-amber-400/25 animate-sacred-aura" />
         <div className="absolute inset-8 rounded-full border border-amber-400/35" />
         <div className="absolute inset-16 rounded-full bg-amber-500/15 blur-2xl" />
 
-        {/* Dual Swaying Kandeels with Interactive Draggable Motion */}
         <div className="relative z-10 flex space-x-10 items-start animate-garland-swing">
-          {/* Round Glass Lantern */}
           <motion.div
             drag="x"
             dragConstraints={{ left: -20, right: 20 }}
@@ -37,7 +36,6 @@ export const SceneHangingLanterns: React.FC<Props> = memo(({ onNext }) => {
               <div className="w-8 h-8 rounded-full bg-yellow-100 blur-[3px] animate-pulse" />
               <div className="absolute inset-0 border-t-2 border-b-2 border-amber-300/40" />
             </div>
-            {/* Hanging Tassels */}
             <div className="flex space-x-1 mt-1">
               <div className="w-0.5 h-8 bg-amber-400" />
               <div className="w-0.5 h-12 bg-yellow-300" />
@@ -45,7 +43,6 @@ export const SceneHangingLanterns: React.FC<Props> = memo(({ onNext }) => {
             </div>
           </motion.div>
 
-          {/* Traditional Hexagonal Royal Kandeel */}
           <motion.div
             drag="x"
             dragConstraints={{ left: -20, right: 20 }}
@@ -57,7 +54,6 @@ export const SceneHangingLanterns: React.FC<Props> = memo(({ onNext }) => {
               <div className="w-6 h-10 rounded bg-yellow-100 blur-[2px] animate-flame-real" />
               <div className="w-full h-1.5 bg-amber-950/70 rounded" />
             </div>
-            {/* Cascading Ribbons */}
             <div className="flex space-x-1.5 -mt-1">
               <div className="w-1 h-10 bg-yellow-300 rounded-full" />
               <div className="w-1 h-14 bg-yellow-400 rounded-full" />
@@ -67,7 +63,6 @@ export const SceneHangingLanterns: React.FC<Props> = memo(({ onNext }) => {
         </div>
       </div>
 
-      {/* Typography with Breathing Space */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -83,7 +78,6 @@ export const SceneHangingLanterns: React.FC<Props> = memo(({ onNext }) => {
         </p>
       </motion.div>
 
-      {/* Button */}
       <motion.button
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
