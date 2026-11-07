@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Sparkles, ArrowRight } from 'lucide-react';
@@ -14,86 +15,56 @@ const SHAYARI_LINES = [
 ];
 
 export const Scene4Shayari: React.FC<SceneProps> = ({ onNext }) => {
-  const [visibleLines, setVisibleLines] = useState<number>(0);
-  const [canProceed, setCanProceed] = useState<boolean>(false);
+  const [visibleLines, setVisibleLines] = useState(0);
+  const [canProceed, setCanProceed] = useState(false);
 
   useEffect(() => {
-    const timers: NodeJS.Timeout[] = [];
-
-    // Line 1
-    timers.push(
-      setTimeout(() => {
-        setVisibleLines(1);
-      }, 800)
-    );
-
-    // Line 2
-    timers.push(
-      setTimeout(() => {
-        setVisibleLines(2);
-      }, 2600)
-    );
-
-    // Line 3
-    timers.push(
-      setTimeout(() => {
-        setVisibleLines(3);
-      }, 4400)
-    );
-
-    // Line 4
-    timers.push(
-      setTimeout(() => {
-        setVisibleLines(4);
-      }, 6200)
-    );
-
-    // Button reveal after full reading
-    timers.push(
-      setTimeout(() => {
-        setCanProceed(true);
-      }, 7800)
-    );
-
+    const timers = [
+      setTimeout(() => setVisibleLines(1), 800),
+      setTimeout(() => setVisibleLines(2), 2600),
+      setTimeout(() => setVisibleLines(3), 4400),
+      setTimeout(() => setVisibleLines(4), 6200),
+      setTimeout(() => setCanProceed(true), 7800),
+    ];
     return () => timers.forEach(clearTimeout);
   }, []);
 
   return (
-    <div className="relative w-full h-full min-h-screen bg-[#070503] flex flex-col items-center justify-center px-4 sm:px-6 py-12 select-none overflow-hidden">
-      {/* Background radial gold glow and sacred mandala watermark */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(80,48,15,0.35)_0%,rgba(7,5,3,1)_85%)] pointer-events-none" />
+    <div className="relative isolate flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-[#170e1c] px-5 py-12">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(126,77,91,.23),transparent_65%)]" />
 
-      <div className="absolute w-[340px] h-[340px] sm:w-[500px] sm:h-[500px] rounded-full border border-[#d4af37]/15 pointer-events-none animate-spin" style={{ animationDuration: '60s' }} />
-      <div className="absolute w-[260px] h-[260px] sm:w-[380px] sm:h-[380px] rounded-full border border-dashed border-[#d4af37]/20 pointer-events-none" />
+      <motion.div
+        className="pointer-events-none absolute left-1/2 top-1/2 h-[300px] w-[300px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#d8b77b]/15 sm:h-[470px] sm:w-[470px]"
+        animate={{ rotate: 360 }}
+        transition={{ duration: 90, repeat: Infinity, ease: 'linear' }}
+      />
 
-      {/* Ornate Frame Header */}
-      <div className="relative z-10 flex items-center gap-3 text-[#d4af37]/70 mb-8 sm:mb-12">
-        <div className="h-[1px] w-12 sm:w-20 bg-gradient-to-r from-transparent to-[#d4af37]" />
-        <Sparkles className="w-4 h-4 text-[#f5b041]" />
-        <span className="font-cinzel text-xs sm:text-sm tracking-[0.25em] uppercase text-[#ffd700]">
+      <div className="relative z-10 mb-8 flex items-center gap-3 text-[#e8c58c] sm:mb-12">
+        <span className="h-px w-8 bg-gradient-to-r from-transparent to-[#d8b77b]" />
+        <Sparkles className="h-4 w-4" />
+        <span className="font-cinzel text-[10px] uppercase tracking-[.3em] sm:text-xs">
           An Ode to Nostalgia
         </span>
-        <Sparkles className="w-4 h-4 text-[#f5b041]" />
-        <div className="h-[1px] w-12 sm:w-20 bg-gradient-to-l from-transparent to-[#d4af37]" />
+        <Sparkles className="h-4 w-4" />
+        <span className="h-px w-8 bg-gradient-to-l from-transparent to-[#d8b77b]" />
       </div>
 
-      {/* Shayari Card */}
-      <div className="relative z-10 max-w-xl w-full text-center p-6 sm:p-10 rounded-3xl bg-[#120c07]/60 backdrop-blur-md border border-[#d4af37]/30 shadow-[0_0_50px_rgba(0,0,0,0.8)]">
-        <div className="space-y-4 sm:space-y-6">
-          {SHAYARI_LINES.map((line, idx) => (
+      <div className="relative z-10 w-full max-w-2xl rounded-[28px] border border-[#d8b77b]/30 bg-[#241727]/80 px-5 py-9 shadow-[0_25px_90px_rgba(0,0,0,.45)] backdrop-blur-xl sm:px-12 sm:py-14">
+        <div className="pointer-events-none absolute inset-3 rounded-[21px] border border-[#d8b77b]/10" />
+
+        <div className="relative space-y-5 text-center sm:space-y-7">
+          {SHAYARI_LINES.map((line, index) => (
             <motion.p
-              key={idx}
+              key={index}
               initial={{ opacity: 0, y: 16, filter: 'blur(8px)' }}
-              animate={
-                visibleLines > idx
-                  ? { opacity: 1, y: 0, filter: 'blur(0px)' }
-                  : { opacity: 0 }
-              }
-              transition={{ duration: 1.4, ease: 'easeOut' }}
-              className={`font-kalam text-xl sm:text-2xl md:text-3xl leading-relaxed tracking-wide ${
-                idx === 3
-                  ? 'text-[#ffdd80] font-bold gold-glow'
-                  : 'text-[#f5e6ca]'
+              animate={visibleLines > index
+                ? { opacity: 1, y: 0, filter: 'blur(0px)' }
+                : { opacity: 0 }}
+              transition={{ duration: 1.3 }}
+              className={`font-kalam text-lg leading-relaxed sm:text-2xl md:text-3xl ${
+                index === 3
+                  ? 'font-bold text-[#ffdfa0] gold-glow'
+                  : 'text-[#f2e4d1]'
               }`}
             >
               {line}
@@ -101,23 +72,18 @@ export const Scene4Shayari: React.FC<SceneProps> = ({ onNext }) => {
           ))}
         </div>
 
-        {/* Continue Button */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={canProceed ? { opacity: 1, scale: 1 } : { opacity: 0 }}
-          transition={{ duration: 0.8 }}
-          className="mt-8 sm:mt-10 pt-4 border-t border-[#d4af37]/20 flex justify-center"
-        >
+        <div className="relative mt-9 flex min-h-12 justify-center border-t border-[#d8b77b]/20 pt-7">
           {canProceed && (
-            <button
+            <motion.button
+              initial={{ opacity: 0, y: 12, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
               onClick={onNext}
-              className="px-6 py-2.5 rounded-full bg-gradient-to-r from-[#b37d2a] via-[#e5a83a] to-[#b37d2a] text-[#0d0905] font-cinzel font-semibold text-xs sm:text-sm tracking-wider uppercase hover:brightness-110 active:scale-95 transition-all shadow-[0_0_25px_rgba(229,168,58,0.4)] flex items-center gap-2 cursor-pointer"
+              className="flex items-center gap-3 rounded-full border border-[#f5d79f]/60 bg-gradient-to-r from-[#a96e3c] via-[#e5bb78] to-[#a96e3c] px-7 py-3 font-cinzel text-xs font-bold uppercase tracking-widest text-[#241525] shadow-lg transition hover:brightness-110 active:scale-95"
             >
-              <span>Continue</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
+              Continue <ArrowRight className="h-4 w-4" />
+            </motion.button>
           )}
-        </motion.div>
+        </div>
       </div>
     </div>
   );
