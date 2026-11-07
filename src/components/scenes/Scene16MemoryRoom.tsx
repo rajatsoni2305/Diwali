@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { soundEffects } from '../../services/soundEffects';
 
 interface Props {
   onNext: () => void;
@@ -6,7 +8,7 @@ interface Props {
   recipientName?: string;
 }
 
-export const Scene16MemoryRoom: React.FC<Props> = ({
+export const Scene16MemoryRoom: React.FC<Props> = memo(({
   onNext,
   photos = [],
   recipientName = "Tanisha"
@@ -18,68 +20,115 @@ export const Scene16MemoryRoom: React.FC<Props> = ({
   ];
 
   const handleNextPhoto = () => {
+    try {
+      soundEffects.play('swipe');
+    } catch (e) {
+      // fallback
+    }
     setPhotoIndex((prev) => (prev + 1) % displayPhotos.length);
   };
 
-  return (
-    <div className="relative min-h-screen flex flex-col items-center justify-center px-4 text-center select-none pt-12 pb-24">
-      <h2 className="text-2xl sm:text-3xl font-serif text-amber-100 mb-1 drop-shadow-[0_2px_10px_rgba(251,191,36,0.5)]">
-        Diwali Memory Frame 📸
-      </h2>
-      <p className="text-amber-200/80 text-xs italic mb-6">
-        Special moments with {recipientName}
-      </p>
+  const handleContinue = () => {
+    try {
+      soundEffects.play('chime');
+    } catch (e) {
+      // fallback
+    }
+    onNext();
+  };
 
-      {/* Ornate Picture Frame with Glowing Borders */}
-      <div className="relative p-3 rounded-3xl bg-gradient-to-b from-amber-300 via-amber-600 to-yellow-800 shadow-[0_0_35px_rgba(245,158,11,0.6)] max-w-xs w-full mb-6">
-        <div className="absolute top-2 left-2 w-3 h-3 rounded-full bg-yellow-200 shadow-[0_0_8px_#fef08a] animate-ping" />
-        <div className="absolute top-2 right-2 w-3 h-3 rounded-full bg-yellow-200 shadow-[0_0_8px_#fef08a] animate-ping" />
-        <div className="absolute bottom-2 left-2 w-3 h-3 rounded-full bg-yellow-200 shadow-[0_0_8px_#fef08a] animate-ping" />
-        <div className="absolute bottom-2 right-2 w-3 h-3 rounded-full bg-yellow-200 shadow-[0_0_8px_#fef08a] animate-ping" />
+  return (
+    <div className="relative min-h-screen w-full flex flex-col items-center justify-center px-4 sm:px-8 text-center select-none pt-20 pb-32">
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        className="mb-8 z-10"
+      >
+        <h2 className="text-3xl sm:text-5xl font-serif font-black text-amber-50 drop-shadow-[0_2px_15px_rgba(251,191,36,0.65)] mb-3">
+          Diwali Memory Frame 📸
+        </h2>
+        <p className="text-amber-200/90 font-serif italic text-base sm:text-lg">
+          Special moments and beautiful smiles with {recipientName}
+        </p>
+      </motion.div>
+
+      {/* Ornate Glowing Photo Frame */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.9 }}
+        className="relative p-4 rounded-[32px] bg-gradient-to-b from-amber-300 via-amber-600 to-yellow-950 shadow-[0_0_45px_rgba(245,158,11,0.7)] max-w-sm sm:max-w-md w-full mb-6 z-10"
+      >
+        {/* Glowing Corner Studs */}
+        <div className="absolute top-3 left-3 w-4 h-4 rounded-full bg-yellow-200 shadow-[0_0_12px_#fef08a] animate-ping" />
+        <div className="absolute top-3 right-3 w-4 h-4 rounded-full bg-yellow-200 shadow-[0_0_12px_#fef08a] animate-ping" />
+        <div className="absolute bottom-3 left-3 w-4 h-4 rounded-full bg-yellow-200 shadow-[0_0_12px_#fef08a] animate-ping" />
+        <div className="absolute bottom-3 right-3 w-4 h-4 rounded-full bg-yellow-200 shadow-[0_0_12px_#fef08a] animate-ping" />
 
         <div className="overflow-hidden rounded-2xl bg-black aspect-[4/5] relative flex items-center justify-center">
-          <img
-            src={displayPhotos[photoIndex]}
-            alt="Diwali Memory"
-            className="w-full h-full object-cover transition-opacity duration-500"
-          />
+          <AnimatePresence mode="wait">
+            <motion.img
+              key={photoIndex}
+              src={displayPhotos[photoIndex]}
+              alt="Diwali Memory"
+              initial={{ opacity: 0, scale: 1.05 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.6 }}
+              className="w-full h-full object-cover"
+            />
+          </AnimatePresence>
         </div>
-      </div>
+      </motion.div>
 
       {displayPhotos.length > 1 && (
-        <button
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
           onClick={handleNextPhoto}
-          className="text-xs text-amber-300 underline mb-6 hover:text-amber-100"
+          className="text-sm text-amber-300 underline mb-8 hover:text-amber-100 font-mono tracking-wider cursor-pointer z-10"
         >
           View Next Memory ({photoIndex + 1}/{displayPhotos.length}) 💫
-        </button>
+        </motion.button>
       )}
 
       {/* Embedded Shayari Card */}
-      <div className="festive-glass rounded-2xl p-6 max-w-sm text-center mb-8 border border-amber-300/30">
-        <h3 className="text-amber-200 font-serif font-bold text-lg mb-2">
+      <motion.div
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4, duration: 0.8 }}
+        className="festive-royal-glass rounded-[28px] p-8 max-w-lg w-full text-center mb-8 border border-amber-300/40 z-10"
+      >
+        <h3 className="text-amber-200 font-serif font-black text-2xl sm:text-3xl mb-5 tracking-wide">
           अर्ज़ किया है..! 🪔
         </h3>
-        <p className="text-amber-100 text-sm font-serif leading-relaxed mb-1">
-          किसी को दिल का दीवाना पसंद है,
+        <p className="text-amber-100 text-lg sm:text-xl font-serif leading-relaxed mb-2">
+          किसी को दिल का दीवाना पसंद है ,
         </p>
-        <p className="text-amber-100 text-sm font-serif leading-relaxed mb-2">
-          तो किसी को दिल का नजराना पसंद है,
+        <p className="text-amber-100 text-lg sm:text-xl font-serif leading-relaxed mb-4">
+          तो किसी को दिल का नजराना पसंद है ,
         </p>
-        <p className="text-amber-100 text-sm font-serif leading-relaxed mb-1">
-          औरों की पसंद का तो पता नहीं,
+        <div className="w-20 h-[1px] bg-amber-400/50 mx-auto my-3" />
+        <p className="text-amber-100 text-lg sm:text-xl font-serif leading-relaxed mb-2">
+          औरों की पसंद का तो पता नहीं ,
         </p>
-        <p className="text-amber-300 text-base font-serif font-semibold leading-relaxed">
+        <p className="text-amber-300 text-xl sm:text-2xl font-serif font-bold leading-relaxed drop-shadow-[0_0_12px_rgba(251,191,36,0.85)]">
           हमें तो आपका मुस्कुराना पसंद है ..! ✨
         </p>
-      </div>
+      </motion.div>
 
-      <button
-        onClick={onNext}
-        className="px-8 py-3 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white font-medium shadow-[0_0_20px_rgba(245,158,11,0.5)] active:scale-95 transition-all"
+      {/* Button */}
+      <motion.button
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        onClick={handleContinue}
+        className="px-12 py-4 rounded-full bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-white font-medium text-lg tracking-wide shadow-[0_0_35px_rgba(245,158,11,0.65)] hover:brightness-110 transition-all border border-amber-300/50 cursor-pointer z-10"
       >
         Make A Wish With Me 🪔
-      </button>
+      </motion.button>
     </div>
   );
-};
+});
+
+Scene16MemoryRoom.displayName = 'Scene16MemoryRoom';
