@@ -1,5 +1,4 @@
 import React, { useEffect, useRef } from 'react';
-import { soundEffects } from '../../services/soundEffects';
 
 interface FireworksCanvasProps {
   onSequenceComplete?: () => void;
@@ -125,14 +124,12 @@ export const FireworksCanvas: React.FC<FireworksCanvasProps> = ({
     const handleClick = (e: MouseEvent) => {
       if (!interactive) return;
       launchRocket(e.clientX, e.clientY);
-      soundEffects.playFireworkBoom();
     };
 
     const handleTouch = (e: TouchEvent) => {
       if (!interactive || e.touches.length === 0) return;
       const touch = e.touches[0];
       launchRocket(touch.clientX, touch.clientY);
-      soundEffects.playFireworkBoom();
     };
 
     window.addEventListener('click', handleClick);

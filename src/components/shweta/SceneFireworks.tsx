@@ -44,7 +44,7 @@ export const SceneFireworks: React.FC<SceneFireworksProps> = ({ onComplete }) =>
           </h1>
 
           <p className="text-sm sm:text-base text-amber-100/80 font-sans font-light tracking-wide max-w-sm mx-auto">
-            May your days be filled with light, laughter, peace and beautiful little moments.
+            May this season bring radiant light, warmth and joy into your world.
           </p>
         </motion.div>
       </div>

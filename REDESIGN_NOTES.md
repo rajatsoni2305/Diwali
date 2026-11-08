@@ -1,32 +1,38 @@
-# Tanisha Diwali redesign — handoff notes
+# Tanisha Diwali Purple & Gold Redesign — 13-scene plan
 
-## Main experience (eight chapters)
-1. Royal welcome (adapted from Shweta's intro)
-2. Magical lights jar (adapted from Shweta)
-3. Interactive diya garden (adapted from Shweta)
-4. Sweets hamper (adapted from Shweta)
-5. Fireworks + Happy Diwali, Tanisha reveal and short greeting (adapted from Shweta)
-6. Wish lantern (Tanisha's original wish submission, Firestore/session persistence and rising-lantern canvas retained)
-7. Original Tanisha shayari (retained)
-8. Tanisha's original digital keepsake (retained), followed by an optional reaction-recording invitation
+This package combines the selected Shweta-inspired purple/gold presentation scenes with selected original Tanisha scenes.
 
-## Preserved from Tanisha's original project
-- Firebase / Firestore services and session handling
-- Cloudinary signed-upload service and server endpoint
-- Admin dashboard
-- Existing wish persistence and rising lantern animation
-- Original shayari and digital keepsake content
-- Existing optional video / voice reaction-recording screen
-- Existing diya / temple / wish sound-effect service
+## Main journey
+1 Intro (Shweta S1)
+2 Magical Lanterns (Shweta S2)
+3 Lights Jar (Shweta S6)
+4 Diya Garden (Shweta S5)
+5 Sweets Hamper (Shweta S7)
+6 Fireworks (Shweta S3)
+7 Original Tanisha Shayari (T4)
+8 Original Tanisha Memory Room (T16)
+9 Wish entry using Tanisha sessionService
+10 Wish-carried lantern animation (Shweta S9)
+11 Original Tanisha final greeting (T18)
+12 Original Tanisha digital keepsake (T19)
+13 Optional reaction recording branch, then revisit (T20)
 
-## Audio
-The copied Shweta audio control uses an original Web Audio-generated soft ambient drone and gentle chimes. It is muted until the visitor taps the sound control. No copyrighted song is bundled. Existing Tanisha interaction sound effects remain in place and were added to jar / diya / hamper interactions.
+The selected components have 13 primary experience stages when the optional recording branch is counted as the final interaction before the revisit screen. The recording screen is optional to the visitor but is in the flow with a skip/finish control.
 
-## Recording and privacy
-The opening camera/microphone consent modal is no longer shown. The visitor reaches a separate optional invitation only after the keepsake. The existing recording screen requests camera or microphone access only when the visitor explicitly chooses to record.
+## Protected files
+The following are copied byte-for-byte from the original Tanisha project ZIP:
+- server.ts
+- firestore.rules
+- firebase-applet-config.json
+- firebase-blueprint.json
+- src/services/firebase.ts
+- src/services/cloudinaryService.ts
+- src/services/recordingManager.ts
+- src/services/sessionService.ts
+- src/components/admin/AdminDashboard.tsx
 
-## Build and deployment checks
-- The source changes have been written and relative imports were statically checked.
-- A production build could not be run in this environment: dependencies are not installed and npm package retrieval timed out; offline npm install reports the Vite/React packages are not cached.
-- Before deploying, run `npm install`, `npm run build`, then verify the existing Render service environment variables. Do not replace the existing Cloudinary API secret with a frontend `VITE_` variable; it must remain server-side.
-- Confirm the existing Render service has the Firebase configuration and Cloudinary server credentials needed by `server.ts`. The ZIP does not contain private Cloudinary credentials.
+## Important verification notes
+- Wish entry calls Tanisha's existing sessionService.saveWish; this service keeps its existing Firestore/local fallback behaviour. The UI does not change the backend implementation.
+- Recording screen uses Tanisha's existing Cloudinary and session services.
+- A successful frontend build does not prove Firestore or Cloudinary network writes; perform live test submissions before production deployment.
+- No secrets are added to this ZIP.

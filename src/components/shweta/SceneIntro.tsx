@@ -40,11 +40,11 @@ export const SceneIntro: React.FC<SceneIntroProps> = ({ onBegin }) => {
         className="max-w-md mx-auto space-y-4"
       >
         <p className="font-serif italic text-2xl sm:text-3xl text-amber-100/90 tracking-wide font-light">
-          A little Diwali magic, made for Tanisha.
+          A little something, made with warmth.
         </p>
 
         <p className="text-xs uppercase tracking-[0.28em] text-amber-400/60 font-sans font-medium">
-          A LITTLE FESTIVE SURPRISE
+          A Personal Diwali Surprise
         </p>
       </motion.div>
 
@@ -64,7 +64,7 @@ export const SceneIntro: React.FC<SceneIntroProps> = ({ onBegin }) => {
           <span className="absolute -inset-1 rounded-full bg-gradient-to-r from-amber-400 to-yellow-300 opacity-30 blur-sm group-hover:opacity-60 transition duration-300" />
           
           <span className="relative flex items-center gap-2">
-            Open Your Diwali Surprise
+            Begin Your Diwali Surprise
             <Sparkles className="w-4 h-4 text-slate-900 animate-spin" style={{ animationDuration: '6s' }} />
           </span>
         </button>

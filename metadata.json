@@ -1,6 +1,6 @@
 {
   "name": "Tanisha's Magical Diwali Quest",
-  "description": "A short, cinematic royal-purple and gold Diwali experience made for Tanisha, with interactive lights, wishes and a personal keepsake.",
-  "requestFramePermissions": [],
-  "majorCapabilities": []
+  "description": "A premium cinematic Diwali journey and heartfelt mythological quest created for Tanisha by Rajat, featuring grand Ayodhya, interactive 14 diyas, secret doors, and personal keepsakes.",
+  "requestFramePermissions": ["camera", "microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
