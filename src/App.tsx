@@ -13,14 +13,13 @@ import { SceneDiyaGarden } from './components/shweta/SceneDiyaGarden';
 import { SceneSweetsHamper } from './components/shweta/SceneSweetsHamper';
 import { SceneFireworksReveal } from './components/SceneFireworksReveal';
 import { Scene17WishLantern } from './components/scenes/Scene17WishLantern';
-import { Scene18FinalGreeting } from './components/scenes/Scene18FinalGreeting';
 import { Scene4Shayari } from './components/scenes/Scene4Shayari';
 import { Scene19DigitalKeepsake } from './components/scenes/Scene19DigitalKeepsake';
 import { Scene19bReactionRecording } from './components/scenes/Scene19bReactionRecording';
 import { Scene20Revisit } from './components/scenes/Scene20Revisit';
 import { OptionalReactionInvite } from './components/OptionalReactionInvite';
 
-const SCENE_FLOW: SceneId[] = ['welcome', 'lights_jar', 'diya_garden', 'sweets_hamper', 'fireworks_reveal', 'wish_lantern', 'opening_shayari', 'final_greeting', 'digital_keepsake', 'reaction_invite', 'reaction_recording', 'revisit'];
+const SCENE_FLOW: SceneId[] = ['welcome', 'lights_jar', 'diya_garden', 'sweets_hamper', 'fireworks_reveal', 'wish_lantern', 'opening_shayari', 'digital_keepsake', 'reaction_invite', 'reaction_recording', 'revisit'];
 
 export default function App() {
   const [currentScene, setCurrentScene] = useState<SceneId>('welcome');
@@ -55,7 +54,6 @@ export default function App() {
             {currentScene === 'fireworks_reveal' && <SceneFireworksReveal onNext={goToNextScene}/>}
             {currentScene === 'wish_lantern' && <Scene17WishLantern onNext={goToNextScene}/>}
             {currentScene === 'opening_shayari' && <Scene4Shayari onNext={goToNextScene}/>}
-            {currentScene === 'final_greeting' && <Scene18FinalGreeting onNext={goToNextScene}/>}
             {currentScene === 'digital_keepsake' && <Scene19DigitalKeepsake onNext={goToNextScene}/>}
             {currentScene === 'reaction_invite' && <OptionalReactionInvite onRecord={goToNextScene} onSkip={() => setCurrentScene('revisit')}/>}
             {currentScene === 'reaction_recording' && <Scene19bReactionRecording onNext={() => setCurrentScene('revisit')}/>}
